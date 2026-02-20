@@ -122,6 +122,15 @@ const TEMPLATE_CONFIGS: TemplateConfig[] = [
     componentDescription: 'ReactFormCustomizer Description'
   },
   {
+    libraryName: '@spfx-template/extension-listviewcommandset',
+    templateName: 'extension-listviewcommandset',
+    templatePath: path.join(REPO_ROOT, 'templates/extension-listviewcommandset'),
+    localTemplatePath: path.join(REPO_ROOT, 'templates'),
+    componentName: 'Minimal',
+    componentAlias: 'Minimal',
+    componentDescription: 'Minimal Description'
+  },
+  {
     libraryName: '@spfx-template/extension-search-query-modifier',
     templateName: 'extension-search-query-modifier',
     templatePath: path.join(REPO_ROOT, 'templates/extension-search-query-modifier'),
