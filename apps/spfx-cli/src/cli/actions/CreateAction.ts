@@ -5,7 +5,7 @@ import {
   CommandLineStringParameter,
   type IRequiredCommandLineStringParameter
 } from '@rushstack/ts-command-line';
-import { MemFsEditor } from 'mem-fs-editor';
+import type { MemFsEditor } from 'mem-fs-editor';
 import * as z from 'zod';
 import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 import { camelCase, kebabCase, snakeCase, upperFirst } from 'lodash';
@@ -16,7 +16,7 @@ import {
   SPFxTemplateRepositoryManager,
   SPFxTemplate
 } from '@microsoft/spfx-template-api';
-import { SOLUTION_NAME_PATTERN } from './validation';
+import { SOLUTION_NAME_PATTERN } from '../validation';
 
 interface IScaffoldProfile {
   localTemplateSources?: Array<string> | readonly string[];
