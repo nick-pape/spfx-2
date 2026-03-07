@@ -15,6 +15,7 @@ import {
 } from '@rushstack/ts-command-line';
 import {
   LocalFileSystemRepositorySource,
+  PublicGitHubRepositorySource,
   type SPFxTemplateCollection,
   SPFxTemplateRepositoryManager,
   type SPFxTemplate,
@@ -22,6 +23,8 @@ import {
 } from '@microsoft/spfx-template-api';
 
 import { SOLUTION_NAME_PATTERN } from '../../utilcities/validation';
+
+const DEFAULT_GITHUB_REPO: string = 'https://github.com/SharePoint/spfx';
 
 // Deterministic namespace for CI mode GUIDs, derived from the well-known URL
 // namespace: uuidv5('spfx-cli:ci', '6ba7b810-9dad-11d1-80b4-00c04fd430c8')
@@ -130,12 +133,28 @@ export class CreateAction extends CommandLineAction {
 
       const manager: SPFxTemplateRepositoryManager = new SPFxTemplateRepositoryManager();
 
-      for (const localPath of this._localTemplateSources.values) {
-        this._terminal.writeLine(`Adding local template source: ${localPath}`);
-        manager.addSource(new LocalFileSystemRepositorySource(localPath));
+      if (this._localTemplateSources.values.length > 0) {
+        for (const localPath of this._localTemplateSources.values) {
+          this._terminal.writeLine(`Adding local template source: ${localPath}`);
+          manager.addSource(new LocalFileSystemRepositorySource(localPath));
+        }
+      } else {
+        // eslint-disable-next-line dot-notation
+        const repoUrl: string = process.env['SPFX_TEMPLATE_REPO_URL'] || DEFAULT_GITHUB_REPO;
+        this._terminal.writeLine(`Using GitHub template source: ${repoUrl}`);
+        manager.addSource(new PublicGitHubRepositorySource(repoUrl));
       }
 
-      const templates: SPFxTemplateCollection = await manager.getTemplatesAsync();
+      let templates: SPFxTemplateCollection;
+      try {
+        templates = await manager.getTemplatesAsync();
+      } catch (fetchError: unknown) {
+        const fetchMessage: string = fetchError instanceof Error ? fetchError.message : String(fetchError);
+        throw new Error(
+          `Failed to fetch templates. If you are offline or behind a firewall, ` +
+            `use --local-template to specify a local template source. Details: ${fetchMessage}`
+        );
+      }
 
       this._terminal.writeLine(templates.toString());
 
