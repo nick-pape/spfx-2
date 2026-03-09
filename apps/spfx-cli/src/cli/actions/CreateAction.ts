@@ -140,9 +140,12 @@ export class CreateAction extends CommandLineAction {
         }
       } else {
         // eslint-disable-next-line dot-notation
-        const repoUrl: string = process.env['SPFX_TEMPLATE_REPO_URL'] || DEFAULT_GITHUB_REPO;
+        const repoUrl: string = (process.env['SPFX_TEMPLATE_REPO_URL'] || DEFAULT_GITHUB_REPO)
+          .trim()
+          .replace(/\/+$/, '')
+          .replace(/\.git$/, '');
         this._terminal.writeLine(`Using GitHub template source: ${repoUrl}`);
-        manager.addSource(new PublicGitHubRepositorySource(repoUrl));
+        manager.addSource(new PublicGitHubRepositorySource(repoUrl, undefined, this._terminal));
       }
 
       let templates: SPFxTemplateCollection;
@@ -152,7 +155,8 @@ export class CreateAction extends CommandLineAction {
         const fetchMessage: string = fetchError instanceof Error ? fetchError.message : String(fetchError);
         throw new Error(
           `Failed to fetch templates. If you are offline or behind a firewall, ` +
-            `use --local-template to specify a local template source. Details: ${fetchMessage}`
+            `use --local-template to specify a local template source. Details: ${fetchMessage}`,
+          { cause: fetchError }
         );
       }
 
