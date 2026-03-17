@@ -8,6 +8,7 @@ exports[`CommandLineHelp prints the help: create 1`] = `
                        [--component-alias COMPONENT_ALIAS]
                        [--component-description COMPONENT_DESCRIPTION]
                        [--solution-name SOLUTION_NAME]
+                       [--spfx-version VERSION]
 
 
 This command creates a new SPFx component.
@@ -34,6 +35,11 @@ Optional arguments:
   --solution-name SOLUTION_NAME
                         The solution name. If not provided, defaults to the
                         kebab-case component name.
+  --spfx-version VERSION
+                        The SPFx version to use (e.g., \\"1.22\\", \\"1.23-rc.0\\").
+                        Selects the corresponding branch from the template
+                        repository. Defaults to the repository's default
+                        branch (main).
 "
 `;
 
