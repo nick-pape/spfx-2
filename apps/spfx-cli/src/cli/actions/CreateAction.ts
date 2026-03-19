@@ -120,7 +120,7 @@ export class CreateAction extends CommandLineAction {
     this._templateUrl = this.defineStringParameter({
       parameterLongName: '--template-url',
       argumentName: 'URL',
-      description: 'URL of the GitHub template repository. ' + `Defaults to ${DEFAULT_GITHUB_REPO}.`,
+      description: `URL of the GitHub template repository. Defaults to ${DEFAULT_GITHUB_REPO}.`,
       environmentVariable: 'SPFX_TEMPLATE_REPO_URL'
     });
 
