@@ -65,6 +65,8 @@ await writer.writeAsync(fs, '/path/to/output');
 Fetches templates from a public GitHub repository. Pin a specific SPFx version with an optional branch/tag ref.
 
 ```typescript
+import { PublicGitHubRepositorySource } from '@microsoft/spfx-template-api';
+
 // Latest (default branch)
 new PublicGitHubRepositorySource('https://github.com/SharePoint/spfx');
 
