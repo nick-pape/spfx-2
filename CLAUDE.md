@@ -165,7 +165,7 @@ The two published packages each have a README that is displayed on NPM:
 
 **Whenever you make a change to a published package, update its README to reflect the change.** This includes:
 
-- New CLI flags or changed flag behaviour → update the `spfx-cli` README flag tables and examples
+- New CLI flags or changed flag behavior → update the `spfx-cli` README flag tables and examples
 - New or removed templates → update the templates table in the `spfx-cli` README
 - New exported classes, types, or functions → update the API reference table in the `spfx-template-api` README
 - Changed usage patterns or render context fields → update code examples in the `spfx-template-api` README

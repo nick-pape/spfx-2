@@ -8,7 +8,7 @@ Programmatic API for loading, rendering, and writing [SharePoint Framework (SPFx
 npm install @microsoft/spfx-template-api
 ```
 
-**Requires Node.js `>=22.14.0 <23.0.0` or `>=24.5.0 <25.0.0`**
+**Requires Node.js `>=22.14.0 <23.0.0`**
 
 ---
 
@@ -129,8 +129,12 @@ The writer uses these helpers internally. You can also import them directly for 
 | `BaseSPFxTemplateRepositorySource` | Base class for building custom template sources |
 | `SPFxRepositorySource` | Interface implemented by all source types |
 | `SPFxTemplateWriter` | Writes a rendered `MemFsEditor` to disk with merge support |
+| `IMergeHelper` | Interface for implementing custom merge helpers |
 | `ISPFxTemplateJson` | Shape of the `template.json` manifest |
 | `IRenderOptions` | Context object passed to `template.renderAsync()` |
+| `SPFxTemplateDefinitionSchema` | Zod schema used to validate `template.json` at load time |
+| `SPFxTemplateJsonFile` | Utility for reading and validating `template.json` files |
+| `SPFxTemplateRepositorySourceTypes` | Type union of all built-in repository source types |
 
 ---
 
