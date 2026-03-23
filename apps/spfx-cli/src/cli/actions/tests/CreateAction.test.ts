@@ -7,6 +7,8 @@ jest.mock('@rushstack/node-core-library', () => {
   return {
     ...actual,
     Executable: {
+      // Only spawn and waitForExitAsync are called by CreateAction; other methods
+      // fall through to the real implementation via the ...actual.Executable spread.
       ...actual.Executable,
       spawn: jest.fn(),
       waitForExitAsync: jest.fn()

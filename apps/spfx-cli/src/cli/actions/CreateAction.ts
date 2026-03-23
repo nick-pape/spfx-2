@@ -3,6 +3,8 @@
 
 import type { ChildProcess } from 'node:child_process';
 
+type PackageManager = 'npm' | 'pnpm' | 'yarn';
+
 import { camelCase, kebabCase, snakeCase, upperFirst } from 'lodash';
 import type { MemFsEditor } from 'mem-fs-editor';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
@@ -278,9 +280,11 @@ export class CreateAction extends CommandLineAction {
       const writer: SPFxTemplateWriter = new SPFxTemplateWriter();
       await writer.writeAsync(fs, targetDir);
 
-      const packageManager: string = this._packageManagerParameter.value ?? 'none';
+      const packageManager: PackageManager | 'none' = this._packageManagerParameter.value as
+        | PackageManager
+        | 'none';
       if (packageManager !== 'none') {
-        await _runInstallAsync(packageManager as PackageManager, targetDir, terminal);
+        await _runInstallAsync(packageManager, targetDir, terminal);
       }
     } catch (error: unknown) {
       const message: string = error instanceof Error ? error.message : String(error);
@@ -289,8 +293,6 @@ export class CreateAction extends CommandLineAction {
     }
   }
 }
-
-type PackageManager = 'npm' | 'pnpm' | 'yarn';
 
 /**
  * Spawns the chosen package manager's install command in targetDir and waits for it to finish.
@@ -313,7 +315,7 @@ async function _runInstallAsync(
     throwOnSignal: false
   });
 
-  if (signal !== null && signal !== undefined) {
+  if (signal != null) {
     throw new Error(`${packageManager} install was terminated by signal ${signal}`);
   } else if (exitCode !== 0) {
     throw new Error(`${packageManager} install exited with code ${exitCode}`);
