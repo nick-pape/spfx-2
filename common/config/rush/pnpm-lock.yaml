@@ -133,9 +133,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -154,9 +151,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -188,9 +182,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -209,9 +200,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -243,9 +231,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -264,9 +249,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -298,9 +280,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -319,9 +298,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -353,9 +329,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -374,9 +347,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -411,9 +381,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -432,9 +399,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -466,9 +430,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -487,9 +448,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -521,9 +479,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -542,9 +497,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -585,9 +537,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -612,9 +561,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -658,9 +604,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -679,9 +622,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -728,9 +668,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -755,9 +692,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -798,9 +732,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -819,9 +750,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -853,9 +781,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -874,9 +799,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -899,9 +821,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -920,9 +839,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -963,9 +879,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -984,9 +897,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -1027,9 +937,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -1048,9 +955,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
@@ -1100,9 +1004,6 @@ importers:
       '@microsoft/sp-module-interfaces':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)
-      '@microsoft/spfx-heft-plugins':
-        specifier: 1.22.2
-        version: 1.22.2(patch_hash=24d1150069b5b5d5f0ff4aabd70e56d05d64ea1774454ac189298673ea1a9d42)(@rushstack/heft@1.2.7(@types/node@22.19.13))(@types/node@22.19.13)
       '@microsoft/spfx-web-build-rig':
         specifier: 1.22.2
         version: 1.22.2(@types/node@22.19.13)(jest-environment-node@29.7.0)(tslib@2.3.1)
@@ -1127,9 +1028,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.48.1
         version: 8.48.1(eslint@8.57.1)(typescript@5.8.3)
-      css-loader:
-        specifier: ~7.1.2
-        version: 7.1.4(webpack@5.95.0)
       eslint:
         specifier: 8.57.1
         version: 8.57.1
