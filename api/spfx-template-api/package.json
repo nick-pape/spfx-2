@@ -4,6 +4,9 @@
   "version": "0.1.0-pre.1",
   "main": "lib/index.js",
   "license": "MIT",
+  "engines": {
+    "node": ">=22.14.0 <23.0.0 || >=24.5.0 <25.0.0"
+  },
   "scripts": {
     "build": "heft test --clean",
     "_phase:build": "heft run --only build -- --clean",
