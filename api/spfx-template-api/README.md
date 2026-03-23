@@ -130,11 +130,12 @@ The writer uses these helpers internally. You can also import them directly for 
 | `SPFxRepositorySource` | Interface implemented by all source types |
 | `SPFxTemplateWriter` | Writes a rendered `MemFsEditor` to disk with merge support |
 | `IMergeHelper` | Interface for implementing custom merge helpers |
+| `ServeJsonMergeHelper` | Merges `config/serve.json` (also available standalone) |
 | `ISPFxTemplateJson` | Shape of the `template.json` manifest |
+| `SPFxTemplateDefinitionSchema` | Zod schema for validating a `template.json` |
+| `SPFxTemplateJsonFile` | Typed wrapper around a parsed `template.json` file |
+| `SPFxTemplateRepositorySourceTypes` | Union type of all built-in repository source types |
 | `IRenderOptions` | Context object passed to `template.renderAsync()` |
-| `SPFxTemplateDefinitionSchema` | Zod schema used to validate `template.json` at load time |
-| `SPFxTemplateJsonFile` | Utility for reading and validating `template.json` files |
-| `SPFxTemplateRepositorySourceTypes` | Type union of all built-in repository source types |
 
 ---
 
