@@ -77,6 +77,8 @@ new PublicGitHubRepositorySource('https://github.com/SharePoint/spfx', '1.22');
 Loads templates from a local directory — useful for offline workflows, CI environments, or authoring custom templates.
 
 ```typescript
+import { LocalFileSystemRepositorySource } from '@microsoft/spfx-template-api';
+
 new LocalFileSystemRepositorySource('./path/to/templates');
 ```
 
@@ -85,6 +87,12 @@ new LocalFileSystemRepositorySource('./path/to/templates');
 `SPFxTemplateRepositoryManager` merges templates from all registered sources. Later sources can override templates from earlier ones.
 
 ```typescript
+import {
+  SPFxTemplateRepositoryManager,
+  PublicGitHubRepositorySource,
+  LocalFileSystemRepositorySource
+} from '@microsoft/spfx-template-api';
+
 const manager = new SPFxTemplateRepositoryManager();
 manager.addSource(new PublicGitHubRepositorySource('https://github.com/SharePoint/spfx'));
 manager.addSource(new LocalFileSystemRepositorySource('./my-custom-templates'));
