@@ -8,7 +8,7 @@ The official CLI for scaffolding [SharePoint Framework (SPFx)](https://aka.ms/sp
 npm install -g @microsoft/spfx-cli
 ```
 
-**Requires Node.js `>=22.14.0 <23.0.0`**
+**Requires Node.js `>=22.14.0 <23.0.0` or `>=24.5.0 <25.0.0`**
 
 ---
 
@@ -48,14 +48,13 @@ Scaffolds a new SPFx component. Templates are pulled from the [SharePoint/spfx](
 | `--spfx-version VERSION` | repo default branch | Branch/tag in the template repo to use (e.g. `1.22`, `1.23-rc.0`) |
 | `--template-url URL` | `https://github.com/SharePoint/spfx` | Custom GitHub template repository |
 | `--local-template PATH` | — | Path to a local template folder (repeatable; bypasses GitHub) |
-| `--package-manager MANAGER` | `none` | Package manager to run after scaffolding (`npm`, `pnpm`, `yarn`, or `none` to skip) |
 
 ### Environment variables
 
 | Variable | Description |
 |----------|-------------|
 | `SPFX_TEMPLATE_REPO_URL` | Equivalent to `--template-url` |
-| `SPFX_CI_MODE=1` | Internal/testing-only: produces deterministic UUIDs for CI; undocumented and subject to change |
+| `SPFX_CI_MODE=1` | Internal/testing-only: produces deterministic UUIDs for CI; not shown in `--help`; subject to change |
 
 ---
 

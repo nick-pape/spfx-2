@@ -109,7 +109,7 @@ The writer uses these helpers internally. You can also import them directly for 
 
 | Class | Merges |
 |-------|--------|
-| `JsonMergeHelper` | Generic deep-merge for any JSON file |
+| `JsonMergeHelper` | Abstract base for JSON/JSONC merge helpers (parse/serialize utilities) |
 | `PackageJsonMergeHelper` | `package.json` (preserves existing scripts and dependencies) |
 | `ConfigJsonMergeHelper` | SPFx `config/` files |
 | `PackageSolutionJsonMergeHelper` | `config/package-solution.json` |
