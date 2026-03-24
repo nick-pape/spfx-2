@@ -212,11 +212,18 @@ export class CreateAction extends CommandLineAction {
         templates = await manager.getTemplatesAsync();
       } catch (fetchError: unknown) {
         const fetchMessage: string = fetchError instanceof Error ? fetchError.message : String(fetchError);
-        throw new Error(
-          `Failed to fetch templates. If you are offline or behind a firewall, ` +
-            `use ${this._localTemplateSourcesParameter.longName} to specify a local template source. Details: ${fetchMessage}`,
-          { cause: fetchError }
-        );
+        if (this._localTemplateSourcesParameter.values.length > 0) {
+          throw new Error(
+            `Failed to load templates from the specified ${this._localTemplateSourcesParameter.longName} path(s). Details: ${fetchMessage}`,
+            { cause: fetchError }
+          );
+        } else {
+          throw new Error(
+            `Failed to fetch templates. If you are offline or behind a firewall, ` +
+              `use ${this._localTemplateSourcesParameter.longName} to specify a local template source. Details: ${fetchMessage}`,
+            { cause: fetchError }
+          );
+        }
       }
 
       terminal.writeLine(templates.toString());
