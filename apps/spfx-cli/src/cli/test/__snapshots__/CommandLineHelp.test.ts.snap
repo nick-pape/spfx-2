@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CommandLineHelp prints the help: create 1`] = `
-"usage: spfx-cli create [-h] [--target-dir TARGET_DIR]
-                       [--local-template TEMPLATE_PATH] --template
-                       TEMPLATE_NAME --library-name LIBRARY_NAME
-                       --component-name COMPONENT_NAME
-                       [--component-alias COMPONENT_ALIAS]
-                       [--component-description COMPONENT_DESCRIPTION]
-                       [--solution-name SOLUTION_NAME] [--template-url URL]
-                       [--spfx-version VERSION]
+"usage: spfx create [-h] [--target-dir TARGET_DIR]
+                   [--local-template TEMPLATE_PATH] --template TEMPLATE_NAME
+                   --library-name LIBRARY_NAME --component-name COMPONENT_NAME
+                   [--component-alias COMPONENT_ALIAS]
+                   [--component-description COMPONENT_DESCRIPTION]
+                   [--solution-name SOLUTION_NAME] [--template-url URL]
+                   [--spfx-version VERSION]
+                   [--package-manager {npm,pnpm,yarn,none}]
 
 
 This command creates a new SPFx component.
@@ -43,11 +43,15 @@ Optional arguments:
                         The branch name in the template repository to use (e.
                         g., \\"1.22\\", \\"1.23-rc.0\\"). Defaults to the
                         repository's default branch (main).
+  --package-manager {npm,pnpm,yarn,none}
+                        Package manager to use for dependency installation
+                        after scaffolding. Use \\"none\\" to skip installation.
+                        The default value is \\"none\\".
 "
 `;
 
 exports[`CommandLineHelp prints the help: global help 1`] = `
-"usage: spfx-cli [-h] <command> ...
+"usage: spfx [-h] <command> ...
 
 CLI for managing SharePoint Framework (SPFx) projects
 
@@ -60,15 +64,13 @@ Positional arguments:
 Optional arguments:
   -h, --help      Show this help message and exit.
 
-[bold]For detailed help about a specific command, use: spfx-cli <command>
--h[normal]
+[bold]For detailed help about a specific command, use: spfx <command> -h[normal]
 "
 `;
 
 exports[`CommandLineHelp prints the help: list-templates 1`] = `
-"usage: spfx-cli list-templates [-h] [--template-url URL]
-                               [--spfx-version VERSION] [--local-source PATH]
-                               [--remote-source URL]
+"usage: spfx list-templates [-h] [--template-url URL] [--spfx-version VERSION]
+                           [--local-source PATH] [--remote-source URL]
 
 
 This command lists all available templates from the default GitHub source and

@@ -1,16 +1,22 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
+import type { ChildProcess } from 'node:child_process';
+
+type PackageManager = 'npm' | 'pnpm' | 'yarn';
+
 import { camelCase, kebabCase, snakeCase, upperFirst } from 'lodash';
 import type { MemFsEditor } from 'mem-fs-editor';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import * as z from 'zod';
 
+import { Executable } from '@rushstack/node-core-library';
 import { Colorize, type Terminal } from '@rushstack/terminal';
 import {
   CommandLineAction,
   type CommandLineStringListParameter,
   type CommandLineStringParameter,
+  type IRequiredCommandLineChoiceParameter,
   type IRequiredCommandLineStringParameter
 } from '@rushstack/ts-command-line';
 import {
@@ -28,8 +34,6 @@ import {
   SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME,
   parseGitHubUrlAndRef
 } from '../../utilities/github';
-
-export { SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME };
 
 // Deterministic namespace for CI mode GUIDs, derived from the well-known URL
 // namespace: uuidv5('spfx-cli:ci', '6ba7b810-9dad-11d1-80b4-00c04fd430c8')
@@ -61,6 +65,7 @@ export class CreateAction extends CommandLineAction {
   private readonly _solutionNameParameter: CommandLineStringParameter;
   private readonly _templateUrlParameter: CommandLineStringParameter;
   private readonly _spfxVersionParameter: CommandLineStringParameter;
+  private readonly _packageManagerParameter: IRequiredCommandLineChoiceParameter<PackageManager | 'none'>;
 
   public constructor(terminal: Terminal) {
     super({
@@ -136,6 +141,15 @@ export class CreateAction extends CommandLineAction {
       description:
         'The branch name in the template repository to use (e.g., "1.22", "1.23-rc.0"). ' +
         "Defaults to the repository's default branch (main)."
+    });
+
+    this._packageManagerParameter = this.defineChoiceParameter({
+      parameterLongName: '--package-manager',
+      description:
+        'Package manager to use for dependency installation after scaffolding. ' +
+        'Use "none" to skip installation.',
+      alternatives: ['npm', 'pnpm', 'yarn', 'none'],
+      defaultValue: 'none'
     });
   }
 
@@ -243,7 +257,6 @@ export class CreateAction extends CommandLineAction {
       const fs: MemFsEditor = await template.renderAsync(
         {
           solution_name: solutionName,
-          eslintProfile: 'react',
           libraryName: this._libraryNameParameter.value,
           spfxVersion: template.spfxVersion,
           // The shields.io badge URL uses dashes as separators, so dashes in version numbers
@@ -267,12 +280,47 @@ export class CreateAction extends CommandLineAction {
       _printFileChanges(this._terminal, fs, targetDir);
       const writer: SPFxTemplateWriter = new SPFxTemplateWriter();
       await writer.writeAsync(fs, targetDir);
+
+      const packageManager: PackageManager | 'none' = this._packageManagerParameter.value;
+      if (packageManager !== 'none') {
+        await _runInstallAsync(packageManager, targetDir, terminal);
+      }
     } catch (error: unknown) {
       const message: string = error instanceof Error ? error.message : String(error);
       terminal.writeErrorLine(`Error creating SPFx component: ${message}`);
       throw error;
     }
   }
+}
+
+/**
+ * Spawns the chosen package manager's install command in targetDir and waits for it to finish.
+ * Files are already written before this is called, so a failure here does not undo scaffolding.
+ */
+async function _runInstallAsync(
+  packageManager: PackageManager,
+  targetDir: string,
+  terminal: Terminal
+): Promise<void> {
+  terminal.writeLine(`Running ${packageManager} install in ${targetDir}...`);
+
+  const child: ChildProcess = Executable.spawn(packageManager, ['install'], {
+    currentWorkingDirectory: targetDir,
+    stdio: 'inherit'
+  });
+
+  const { exitCode, signal } = await Executable.waitForExitAsync(child, {
+    throwOnNonZeroExitCode: false,
+    throwOnSignal: false
+  });
+
+  if (signal != null) {
+    throw new Error(`${packageManager} install was terminated by signal ${signal}`);
+  } else if (exitCode !== 0) {
+    throw new Error(`${packageManager} install exited with code ${exitCode}`);
+  }
+
+  terminal.writeLine(`${packageManager} install completed successfully.`);
 }
 
 /**

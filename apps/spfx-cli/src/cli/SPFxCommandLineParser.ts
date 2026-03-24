@@ -10,7 +10,7 @@ import { ListTemplatesAction } from './actions/ListTemplatesAction';
 export class SPFxCommandLineParser extends CommandLineParser {
   public constructor(terminal: Terminal) {
     super({
-      toolFilename: 'spfx-cli',
+      toolFilename: 'spfx',
       toolDescription: 'CLI for managing SharePoint Framework (SPFx) projects'
     });
 

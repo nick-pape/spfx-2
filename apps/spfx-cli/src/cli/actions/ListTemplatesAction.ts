@@ -87,7 +87,7 @@ export class ListTemplatesAction extends CommandLineAction {
       const ref: string | undefined = spfxVersion ?? urlBranch;
 
       terminal.writeLine(`Using GitHub template source: ${repoUrl}${ref ? ` (branch: ${ref})` : ''}`);
-      manager.addSource(new PublicGitHubRepositorySource(repoUrl, ref, this._terminal));
+      manager.addSource(new PublicGitHubRepositorySource(repoUrl, ref, terminal));
 
       // Additive: also include any --local-source paths
       for (const localPath of this._localSourcesParameter.values) {
@@ -103,9 +103,7 @@ export class ListTemplatesAction extends CommandLineAction {
           `Adding remote template source: ${additionalRepoUrl}` +
             `${additionalUrlBranch ? ` (branch: ${additionalUrlBranch})` : ''}`
         );
-        manager.addSource(
-          new PublicGitHubRepositorySource(additionalRepoUrl, additionalUrlBranch, this._terminal)
-        );
+        manager.addSource(new PublicGitHubRepositorySource(additionalRepoUrl, additionalUrlBranch, terminal));
       }
 
       let templates: SPFxTemplateCollection;
