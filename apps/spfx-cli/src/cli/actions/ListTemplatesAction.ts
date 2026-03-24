@@ -73,11 +73,7 @@ export class ListTemplatesAction extends SPFxActionBase {
         templates = await manager.getTemplatesAsync();
       } catch (fetchError: unknown) {
         const fetchMessage: string = fetchError instanceof Error ? fetchError.message : String(fetchError);
-        throw new Error(
-          `Failed to fetch templates. If you are offline or behind a firewall, ` +
-            `use ${this._localSourcesParameter.longName} to specify a local template source. Details: ${fetchMessage}`,
-          { cause: fetchError }
-        );
+        throw new Error(`Failed to fetch templates. Details: ${fetchMessage}`, { cause: fetchError });
       }
 
       terminal.writeLine(templates.toString());

@@ -202,9 +202,9 @@ describe('ListTemplatesAction', () => {
   });
 
   describe('error handling', () => {
-    it('throws with a message mentioning --local-source when fetch fails', async () => {
+    it('does not suggest --local-source when fetch fails', async () => {
       MockedManager.prototype.getTemplatesAsync.mockRejectedValue(new Error('ENOTFOUND'));
-      await expect(runListAsync()).rejects.toThrow(/use --local-source/);
+      await expect(runListAsync()).rejects.not.toThrow(/use --local-source/);
     });
 
     it('throws with a message mentioning "Failed to fetch templates"', async () => {
