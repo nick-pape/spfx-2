@@ -23,9 +23,13 @@ import {
 } from '@microsoft/spfx-template-api';
 
 import { SOLUTION_NAME_PATTERN } from '../../utilities/validation';
+import {
+  DEFAULT_GITHUB_REPO,
+  SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME,
+  parseGitHubUrlAndRef
+} from '../../utilities/github';
 
-const DEFAULT_GITHUB_REPO: string = 'https://github.com/SharePoint/spfx';
-export const SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME: string = 'SPFX_TEMPLATE_REPO_URL';
+export { SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME };
 
 // Deterministic namespace for CI mode GUIDs, derived from the well-known URL
 // namespace: uuidv5('spfx-cli:ci', '6ba7b810-9dad-11d1-80b4-00c04fd430c8')
@@ -269,25 +273,6 @@ export class CreateAction extends CommandLineAction {
       throw error;
     }
   }
-}
-
-/**
- * Parses a GitHub (or GHE) URL that may contain a `/tree/<ref>` path segment.
- * Returns the clean repository URL (without `.git` or trailing slashes) and the optional branch ref.
- */
-function parseGitHubUrlAndRef(rawUrl: string): { repoUrl: string; urlBranch: string | undefined } {
-  const normalized: string = rawUrl.trim().replace(/\/+$/, '');
-  // Match https://<host>/owner/repo[.git]/tree/<ref> — host-agnostic to support GHE.
-  // Only the first path segment after /tree/ is captured as the ref; subdirectory
-  // suffixes (e.g. /tree/main/some/subdir) are ignored.
-  const treeMatch: RegExpMatchArray | null = normalized.match(
-    /^(?<repo>https?:\/\/[^/]+\/[^/]+\/[^/]+?)(?:\.git)?\/tree\/(?<ref>[^/]+)/
-  );
-  if (treeMatch?.groups) {
-    const { repo, ref } = treeMatch.groups as { repo: string; ref: string };
-    return { repoUrl: repo, urlBranch: ref };
-  }
-  return { repoUrl: normalized.replace(/\.git$/, ''), urlBranch: undefined };
 }
 
 /**
