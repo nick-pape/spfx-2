@@ -17,9 +17,8 @@ import {
 import {
   addDefaultGitHubSource,
   DEFAULT_GITHUB_REPO,
-  SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME,
-  TEMPLATE_URL_DESCRIPTION,
-  SPFX_VERSION_DESCRIPTION,
+  TEMPLATE_URL_PARAMETER_DEFINITION,
+  SPFX_VERSION_PARAMETER_DEFINITION,
   parseGitHubUrlAndRef
 } from '../../utilities/github';
 
@@ -42,18 +41,9 @@ export class ListTemplatesAction extends CommandLineAction {
 
     this._terminal = terminal;
 
-    this._templateUrlParameter = this.defineStringParameter({
-      parameterLongName: '--template-url',
-      argumentName: 'URL',
-      description: TEMPLATE_URL_DESCRIPTION,
-      environmentVariable: SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME
-    });
+    this._templateUrlParameter = this.defineStringParameter(TEMPLATE_URL_PARAMETER_DEFINITION);
 
-    this._spfxVersionParameter = this.defineStringParameter({
-      parameterLongName: '--spfx-version',
-      argumentName: 'VERSION',
-      description: SPFX_VERSION_DESCRIPTION
-    });
+    this._spfxVersionParameter = this.defineStringParameter(SPFX_VERSION_PARAMETER_DEFINITION);
 
     this._localSourcesParameter = this.defineStringListParameter({
       parameterLongName: '--local-source',

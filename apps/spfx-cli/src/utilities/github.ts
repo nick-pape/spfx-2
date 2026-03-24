@@ -2,6 +2,7 @@
 // See LICENSE in the project root for license information.
 
 import type { Terminal } from '@rushstack/terminal';
+import type { ICommandLineStringDefinition } from '@rushstack/ts-command-line';
 import {
   PublicGitHubRepositorySource,
   type SPFxTemplateRepositoryManager
@@ -10,10 +11,20 @@ import {
 export const DEFAULT_GITHUB_REPO: string = 'https://github.com/SharePoint/spfx';
 export const SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME: string = 'SPFX_TEMPLATE_REPO_URL';
 
-export const TEMPLATE_URL_DESCRIPTION: string = `URL of the GitHub template repository. Defaults to ${DEFAULT_GITHUB_REPO}.`;
-export const SPFX_VERSION_DESCRIPTION: string =
-  'The branch name in the template repository to use (e.g., "1.22", "1.23-rc.0"). ' +
-  "Defaults to the repository's default branch (main).";
+export const TEMPLATE_URL_PARAMETER_DEFINITION: ICommandLineStringDefinition = {
+  parameterLongName: '--template-url',
+  argumentName: 'URL',
+  description: `URL of the GitHub template repository. Defaults to ${DEFAULT_GITHUB_REPO}.`,
+  environmentVariable: SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME
+};
+
+export const SPFX_VERSION_PARAMETER_DEFINITION: ICommandLineStringDefinition = {
+  parameterLongName: '--spfx-version',
+  argumentName: 'VERSION',
+  description:
+    'The branch name in the template repository to use (e.g., "1.22", "1.23-rc.0"). ' +
+    "Defaults to the repository's default branch (main)."
+};
 
 /**
  * Parses a GitHub (or GHE) URL that may contain a `/tree/<ref>` path segment.

@@ -31,9 +31,8 @@ import { SOLUTION_NAME_PATTERN } from '../../utilities/validation';
 import {
   addDefaultGitHubSource,
   DEFAULT_GITHUB_REPO,
-  SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME,
-  TEMPLATE_URL_DESCRIPTION,
-  SPFX_VERSION_DESCRIPTION
+  TEMPLATE_URL_PARAMETER_DEFINITION,
+  SPFX_VERSION_PARAMETER_DEFINITION
 } from '../../utilities/github';
 
 // Deterministic namespace for CI mode GUIDs, derived from the well-known URL
@@ -129,18 +128,9 @@ export class CreateAction extends CommandLineAction {
       description: 'The solution name. If not provided, defaults to the kebab-case component name.'
     });
 
-    this._templateUrlParameter = this.defineStringParameter({
-      parameterLongName: '--template-url',
-      argumentName: 'URL',
-      description: TEMPLATE_URL_DESCRIPTION,
-      environmentVariable: SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME
-    });
+    this._templateUrlParameter = this.defineStringParameter(TEMPLATE_URL_PARAMETER_DEFINITION);
 
-    this._spfxVersionParameter = this.defineStringParameter({
-      parameterLongName: '--spfx-version',
-      argumentName: 'VERSION',
-      description: SPFX_VERSION_DESCRIPTION
-    });
+    this._spfxVersionParameter = this.defineStringParameter(SPFX_VERSION_PARAMETER_DEFINITION);
 
     this._packageManagerParameter = this.defineChoiceParameter({
       parameterLongName: '--package-manager',
