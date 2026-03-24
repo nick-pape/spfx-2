@@ -27,7 +27,7 @@ import {
 } from '@microsoft/spfx-template-api';
 
 import { SOLUTION_NAME_PATTERN } from '../../utilities/validation';
-import { SPFxAction } from './SPFxAction';
+import { SPFxActionBase } from './SPFxAction';
 
 // Deterministic namespace for CI mode GUIDs, derived from the well-known URL
 // namespace: uuidv5('spfx-cli:ci', '6ba7b810-9dad-11d1-80b4-00c04fd430c8')
@@ -46,7 +46,7 @@ const ScaffoldProfileSchema: z.ZodType<IScaffoldProfile> = z.object({
   templateName: z.string().min(1)
 });
 
-export class CreateAction extends SPFxAction {
+export class CreateAction extends SPFxActionBase {
   private readonly _targetDirParameter: IRequiredCommandLineStringParameter;
   private readonly _templateParameter: IRequiredCommandLineStringParameter;
   private readonly _localTemplateSourcesParameter: CommandLineStringListParameter;

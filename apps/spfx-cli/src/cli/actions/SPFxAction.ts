@@ -23,7 +23,7 @@ import {
  * Defines the shared `--template-url` and `--spfx-version` parameters and provides
  * a helper to register a GitHub template source on a repository manager.
  */
-export abstract class SPFxAction extends CommandLineAction {
+export abstract class SPFxActionBase extends CommandLineAction {
   protected readonly _terminal: Terminal;
   protected readonly _templateUrlParameter: CommandLineStringParameter;
   protected readonly _spfxVersionParameter: CommandLineStringParameter;
