@@ -137,8 +137,8 @@ export class CreateAction extends CommandLineAction {
       parameterLongName: '--spfx-version',
       argumentName: 'VERSION',
       description:
-        'The branch name in the template repository to use (e.g., "1.22", "1.23-rc.0"). ' +
-        "Defaults to the repository's default branch (main)."
+        'The SPFx version to use (e.g., "1.22", "1.23-rc.0"). Resolves to the "version/<VERSION>" branch ' +
+        "in the template repository. Defaults to the repository's default branch (main)."
     });
 
     this._packageManagerParameter = this.defineChoiceParameter({
@@ -184,14 +184,24 @@ export class CreateAction extends CommandLineAction {
         const rawUrl: string = (this._templateUrlParameter.value ?? '').trim() || DEFAULT_GITHUB_REPO;
         const { repoUrl, urlBranch } = parseGitHubUrlAndRef(rawUrl);
 
-        const spfxVersion: string | undefined = this._spfxVersionParameter.value;
-        if (spfxVersion !== undefined && urlBranch !== undefined) {
+        const spfxVersionRaw: string | undefined = this._spfxVersionParameter.value?.trim();
+        let spfxVersionBranch: string | undefined;
+        if (spfxVersionRaw) {
+          if (spfxVersionRaw.startsWith('version/')) {
+            spfxVersionBranch = spfxVersionRaw;
+          } else {
+            spfxVersionBranch = `version/${spfxVersionRaw}`;
+          }
+        }
+
+        if (spfxVersionBranch && urlBranch) {
           terminal.writeWarningLine(
             `${this._templateUrlParameter.longName} contains a branch ('/tree/${urlBranch}'). ` +
-              `${this._spfxVersionParameter.longName} "${spfxVersion}" will take precedence.`
+              `${this._spfxVersionParameter.longName} "${spfxVersionRaw}" will take precedence.`
           );
         }
-        const ref: string | undefined = spfxVersion ?? urlBranch;
+
+        const ref: string | undefined = spfxVersionBranch ?? urlBranch;
 
         terminal.writeLine(`Using GitHub template source: ${repoUrl}${ref ? ` (branch: ${ref})` : ''}`);
         manager.addSource(new PublicGitHubRepositorySource(repoUrl, ref, this._terminal));
