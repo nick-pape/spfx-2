@@ -179,7 +179,13 @@ export class CreateAction extends SPFxActionBase {
           `Adding remote template source: ${additionalRepoUrl}` +
             `${additionalUrlBranch ? ` (branch: ${additionalUrlBranch})` : ''}`
         );
-        manager.addSource(new PublicGitHubRepositorySource(additionalRepoUrl, additionalUrlBranch, terminal));
+        manager.addSource(
+          new PublicGitHubRepositorySource({
+            repoUrl: additionalRepoUrl,
+            branch: additionalUrlBranch,
+            terminal
+          })
+        );
       }
 
       let templates: SPFxTemplateCollection;
