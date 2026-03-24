@@ -149,6 +149,7 @@ export class SPFxTemplateJsonFile {
     if (!result.success) {
       throw new Error(`Invalid template.json file at ${filePath}: ${result.error}`);
     }
+
     return new SPFxTemplateJsonFile(result.data);
   }
 
