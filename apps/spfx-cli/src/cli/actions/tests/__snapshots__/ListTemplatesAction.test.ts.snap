@@ -93,7 +93,7 @@ Array [
 
 exports[`ListTemplatesAction --spfx-version passes ref to default PublicGitHubRepositorySource 1`] = `
 Array [
-  "[    log] Using GitHub template source: https://github.com/SharePoint/spfx (branch: 1.22)[n]",
+  "[    log] Using GitHub template source: https://github.com/SharePoint/spfx (branch: version/1.22)[n]",
   "[    log] # of templates: 1[n]",
   "[    log] [n]",
   "[    log] Template Name: webpart-minimal[n]",
@@ -108,7 +108,7 @@ Array [
 exports[`ListTemplatesAction --spfx-version takes precedence over branch encoded in SPFX_TEMPLATE_REPO_URL /tree/ path 1`] = `
 Array [
   "[warning] --template-url contains a branch ('/tree/pending-fixes'). --spfx-version \\"1.22\\" will take precedence.[n]",
-  "[    log] Using GitHub template source: https://github.com/SharePoint/spfx (branch: 1.22)[n]",
+  "[    log] Using GitHub template source: https://github.com/SharePoint/spfx (branch: version/1.22)[n]",
   "[    log] # of templates: 1[n]",
   "[    log] [n]",
   "[    log] Template Name: webpart-minimal[n]",

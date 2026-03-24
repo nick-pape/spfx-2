@@ -101,7 +101,7 @@ describe('ListTemplatesAction', () => {
       await runListAsync(['--spfx-version', '1.22']);
       expect(MockedGitHub).toHaveBeenCalledWith(
         'https://github.com/SharePoint/spfx',
-        '1.22',
+        'version/1.22',
         expect.anything()
       );
     });
@@ -112,7 +112,7 @@ describe('ListTemplatesAction', () => {
       await runListAsync(['--spfx-version', '1.22']);
       expect(MockedGitHub).toHaveBeenCalledWith(
         'https://github.com/SharePoint/spfx',
-        '1.22',
+        'version/1.22',
         expect.anything()
       );
     });

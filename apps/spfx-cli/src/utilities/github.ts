@@ -22,8 +22,8 @@ export const SPFX_VERSION_PARAMETER_DEFINITION: ICommandLineStringDefinition = {
   parameterLongName: '--spfx-version',
   argumentName: 'VERSION',
   description:
-    'The branch name in the template repository to use (e.g., "1.22", "1.23-rc.0"). ' +
-    "Defaults to the repository's default branch (main)."
+    'The SPFx version to use (e.g., "1.22", "1.23-rc.0"). Resolves to the "version/<VERSION>" branch ' +
+    "in the template repository. Defaults to the repository's default branch (main)."
 };
 
 /**
@@ -54,18 +54,26 @@ export function parseGitHubUrlAndRef(rawUrl: string): { repoUrl: string; urlBran
 export function addDefaultGitHubSource(
   manager: SPFxTemplateRepositoryManager,
   rawUrl: string,
-  spfxVersion: string | undefined,
+  spfxVersionRaw: string | undefined,
   terminal: Terminal
 ): void {
   const { repoUrl, urlBranch } = parseGitHubUrlAndRef(rawUrl);
 
-  if (spfxVersion !== undefined && urlBranch !== undefined) {
+  // Map user-supplied version like "1.22" to branch "version/1.22"; pass through
+  // if it already starts with "version/".
+  let spfxVersionBranch: string | undefined;
+  const trimmedVersion: string | undefined = spfxVersionRaw?.trim();
+  if (trimmedVersion) {
+    spfxVersionBranch = trimmedVersion.startsWith('version/') ? trimmedVersion : `version/${trimmedVersion}`;
+  }
+
+  if (spfxVersionBranch !== undefined && urlBranch !== undefined) {
     terminal.writeWarningLine(
       `--template-url contains a branch ('/tree/${urlBranch}'). ` +
-        `--spfx-version "${spfxVersion}" will take precedence.`
+        `--spfx-version "${trimmedVersion}" will take precedence.`
     );
   }
-  const ref: string | undefined = spfxVersion ?? urlBranch;
+  const ref: string | undefined = spfxVersionBranch ?? urlBranch;
 
   terminal.writeLine(`Using GitHub template source: ${repoUrl}${ref ? ` (branch: ${ref})` : ''}`);
   manager.addSource(new PublicGitHubRepositorySource(repoUrl, ref, terminal));
