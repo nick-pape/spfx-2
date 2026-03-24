@@ -21,7 +21,6 @@ import {
 } from '@rushstack/ts-command-line';
 import {
   LocalFileSystemRepositorySource,
-  PublicGitHubRepositorySource,
   type SPFxTemplateCollection,
   SPFxTemplateRepositoryManager,
   type SPFxTemplate,
@@ -30,9 +29,11 @@ import {
 
 import { SOLUTION_NAME_PATTERN } from '../../utilities/validation';
 import {
+  addDefaultGitHubSource,
   DEFAULT_GITHUB_REPO,
   SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME,
-  parseGitHubUrlAndRef
+  TEMPLATE_URL_DESCRIPTION,
+  SPFX_VERSION_DESCRIPTION
 } from '../../utilities/github';
 
 // Deterministic namespace for CI mode GUIDs, derived from the well-known URL
@@ -131,16 +132,14 @@ export class CreateAction extends CommandLineAction {
     this._templateUrlParameter = this.defineStringParameter({
       parameterLongName: '--template-url',
       argumentName: 'URL',
-      description: `URL of the GitHub template repository. Defaults to ${DEFAULT_GITHUB_REPO}.`,
+      description: TEMPLATE_URL_DESCRIPTION,
       environmentVariable: SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME
     });
 
     this._spfxVersionParameter = this.defineStringParameter({
       parameterLongName: '--spfx-version',
       argumentName: 'VERSION',
-      description:
-        'The branch name in the template repository to use (e.g., "1.22", "1.23-rc.0"). ' +
-        "Defaults to the repository's default branch (main)."
+      description: SPFX_VERSION_DESCRIPTION
     });
 
     this._packageManagerParameter = this.defineChoiceParameter({
@@ -184,19 +183,7 @@ export class CreateAction extends CommandLineAction {
         }
       } else {
         const rawUrl: string = (this._templateUrlParameter.value ?? '').trim() || DEFAULT_GITHUB_REPO;
-        const { repoUrl, urlBranch } = parseGitHubUrlAndRef(rawUrl);
-
-        const spfxVersion: string | undefined = this._spfxVersionParameter.value;
-        if (spfxVersion !== undefined && urlBranch !== undefined) {
-          terminal.writeWarningLine(
-            `${this._templateUrlParameter.longName} contains a branch ('/tree/${urlBranch}'). ` +
-              `${this._spfxVersionParameter.longName} "${spfxVersion}" will take precedence.`
-          );
-        }
-        const ref: string | undefined = spfxVersion ?? urlBranch;
-
-        terminal.writeLine(`Using GitHub template source: ${repoUrl}${ref ? ` (branch: ${ref})` : ''}`);
-        manager.addSource(new PublicGitHubRepositorySource(repoUrl, ref, this._terminal));
+        addDefaultGitHubSource(manager, rawUrl, this._spfxVersionParameter.value, terminal);
       }
 
       let templates: SPFxTemplateCollection;
