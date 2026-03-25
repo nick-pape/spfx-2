@@ -20,14 +20,12 @@ import type {
 } from '@rushstack/ts-command-line';
 import {
   LocalFileSystemRepositorySource,
-  PublicGitHubRepositorySource,
   type SPFxTemplateCollection,
   SPFxTemplateRepositoryManager,
   type SPFxTemplate,
   SPFxTemplateWriter
 } from '@microsoft/spfx-template-api';
 
-import { parseGitHubUrlAndRef } from '../../utilities/github';
 import { SOLUTION_NAME_PATTERN } from '../../utilities/validation';
 import { SPFxActionBase } from './SPFxActionBase';
 
@@ -52,7 +50,6 @@ export class CreateAction extends SPFxActionBase {
   private readonly _targetDirParameter: IRequiredCommandLineStringParameter;
   private readonly _templateParameter: IRequiredCommandLineStringParameter;
   private readonly _localTemplateSourcesParameter: CommandLineStringListParameter;
-  private readonly _remoteSourcesParameter: CommandLineStringListParameter;
   private readonly _libraryNameParameter: IRequiredCommandLineStringParameter;
   private readonly _componentNameParameter: IRequiredCommandLineStringParameter;
   private readonly _componentAliasParameter: CommandLineStringParameter;
@@ -81,12 +78,6 @@ export class CreateAction extends SPFxActionBase {
       parameterLongName: '--local-template',
       argumentName: 'TEMPLATE_PATH',
       description: 'Path to a local template folder'
-    });
-
-    this._remoteSourcesParameter = this.defineStringListParameter({
-      parameterLongName: '--remote-source',
-      argumentName: 'URL',
-      description: 'Public GitHub repository URL to use as an additional template source (repeatable)'
     });
 
     this._templateParameter = this.defineStringParameter({
@@ -171,22 +162,7 @@ export class CreateAction extends SPFxActionBase {
         this._addGitHubTemplateSource(manager);
       }
 
-      // Always process --remote-source URLs (additive with either local or default sources)
-      for (const remoteUrl of this._remoteSourcesParameter.values) {
-        const { repoUrl: additionalRepoUrl, urlBranch: additionalUrlBranch } =
-          parseGitHubUrlAndRef(remoteUrl);
-        terminal.writeLine(
-          `Adding remote template source: ${additionalRepoUrl}` +
-            `${additionalUrlBranch ? ` (branch: ${additionalUrlBranch})` : ''}`
-        );
-        manager.addSource(
-          new PublicGitHubRepositorySource({
-            repoUrl: additionalRepoUrl,
-            branch: additionalUrlBranch,
-            terminal
-          })
-        );
-      }
+      this._addRemoteSources(manager);
 
       let templates: SPFxTemplateCollection;
       try {

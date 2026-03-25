@@ -177,19 +177,17 @@ describe('CreateAction', () => {
         await runCreateAsync(['--remote-source', 'https://github.com/my-org/my-templates']);
         expect(MockedGitHub).toHaveBeenCalledTimes(2);
         // First call: default source
-        expect(MockedGitHub).toHaveBeenNthCalledWith(
-          1,
-          'https://github.com/SharePoint/spfx',
-          undefined,
-          expect.anything()
-        );
+        expect(MockedGitHub).toHaveBeenNthCalledWith(1, {
+          repoUrl: 'https://github.com/SharePoint/spfx',
+          branch: undefined,
+          terminal: expect.anything()
+        });
         // Second call: remote source
-        expect(MockedGitHub).toHaveBeenNthCalledWith(
-          2,
-          'https://github.com/my-org/my-templates',
-          undefined,
-          expect.anything()
-        );
+        expect(MockedGitHub).toHaveBeenNthCalledWith(2, {
+          repoUrl: 'https://github.com/my-org/my-templates',
+          branch: undefined,
+          terminal: expect.anything()
+        });
       });
 
       it('adds multiple remote sources for multiple --remote-source flags', async () => {
@@ -205,12 +203,11 @@ describe('CreateAction', () => {
 
       it('extracts branch from /tree/ in --remote-source URL', async () => {
         await runCreateAsync(['--remote-source', 'https://github.com/my-org/my-templates/tree/my-branch']);
-        expect(MockedGitHub).toHaveBeenNthCalledWith(
-          2,
-          'https://github.com/my-org/my-templates',
-          'my-branch',
-          expect.anything()
-        );
+        expect(MockedGitHub).toHaveBeenNthCalledWith(2, {
+          repoUrl: 'https://github.com/my-org/my-templates',
+          branch: 'my-branch',
+          terminal: expect.anything()
+        });
       });
 
       it('works alongside --local-template without adding the default GitHub source', async () => {
@@ -223,11 +220,11 @@ describe('CreateAction', () => {
         expect(MockedLocal).toHaveBeenCalledWith('/path/to/templates');
         // Only the remote source — no default GitHub
         expect(MockedGitHub).toHaveBeenCalledTimes(1);
-        expect(MockedGitHub).toHaveBeenCalledWith(
-          'https://github.com/my-org/my-templates',
-          undefined,
-          expect.anything()
-        );
+        expect(MockedGitHub).toHaveBeenCalledWith({
+          repoUrl: 'https://github.com/my-org/my-templates',
+          branch: undefined,
+          terminal: expect.anything()
+        });
       });
     });
   });
