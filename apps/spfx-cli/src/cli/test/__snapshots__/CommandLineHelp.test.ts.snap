@@ -2,7 +2,7 @@
 
 exports[`CommandLineHelp prints the help: create 1`] = `
 "usage: spfx create [-h] [--template-url URL] [--spfx-version VERSION]
-                   [--local-template TEMPLATE_PATH] [--remote-source URL]
+                   [--local-source TEMPLATE_PATH] [--remote-source URL]
                    [--target-dir TARGET_DIR] --template TEMPLATE_NAME
                    --library-name LIBRARY_NAME --component-name COMPONENT_NAME
                    [--component-alias COMPONENT_ALIAS]
@@ -24,7 +24,7 @@ Optional arguments:
                         Resolves to the \\"version/<VERSION>\\" branch in the
                         template repository. Defaults to the repository's
                         default branch (main).
-  --local-template TEMPLATE_PATH
+  --local-source TEMPLATE_PATH
                         Path to a local template folder (repeatable)
   --remote-source URL   Public GitHub repository URL to use as an additional
                         template source (repeatable)
@@ -73,12 +73,12 @@ Optional arguments:
 
 exports[`CommandLineHelp prints the help: list-templates 1`] = `
 "usage: spfx list-templates [-h] [--template-url URL] [--spfx-version VERSION]
-                           [--local-template TEMPLATE_PATH]
+                           [--local-source TEMPLATE_PATH]
                            [--remote-source URL]
 
 
 This command lists all available templates from the default GitHub source and
-any additional sources specified with --local-template or --remote-source.
+any additional sources specified with --local-source or --remote-source.
 
 Optional arguments:
   -h, --help            Show this help message and exit.
@@ -91,7 +91,7 @@ Optional arguments:
                         Resolves to the \\"version/<VERSION>\\" branch in the
                         template repository. Defaults to the repository's
                         default branch (main).
-  --local-template TEMPLATE_PATH
+  --local-source TEMPLATE_PATH
                         Path to a local template folder (repeatable)
   --remote-source URL   Public GitHub repository URL to use as an additional
                         template source (repeatable)

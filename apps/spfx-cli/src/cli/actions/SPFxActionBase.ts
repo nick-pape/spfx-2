@@ -23,7 +23,7 @@ import {
 
 /**
  * Base class for SPFx CLI actions that work with template sources.
- * Defines the shared `--template-url`, `--spfx-version`, `--local-template`, and
+ * Defines the shared `--template-url`, `--spfx-version`, `--local-source`, and
  * `--remote-source` parameters and provides helpers for source registration and
  * template fetching with context-aware error messages.
  */
@@ -31,7 +31,7 @@ export abstract class SPFxActionBase extends CommandLineAction {
   protected readonly _terminal: Terminal;
   protected readonly _templateUrlParameter: CommandLineStringParameter;
   protected readonly _spfxVersionParameter: CommandLineStringParameter;
-  protected readonly _localTemplateParameter: CommandLineStringListParameter;
+  protected readonly _localSourceParameter: CommandLineStringListParameter;
   protected readonly _remoteSourcesParameter: CommandLineStringListParameter;
 
   protected constructor(options: ICommandLineActionOptions, terminal: Terminal) {
@@ -54,8 +54,8 @@ export abstract class SPFxActionBase extends CommandLineAction {
         "in the template repository. Defaults to the repository's default branch (main)."
     });
 
-    this._localTemplateParameter = this.defineStringListParameter({
-      parameterLongName: '--local-template',
+    this._localSourceParameter = this.defineStringListParameter({
+      parameterLongName: '--local-source',
       argumentName: 'TEMPLATE_PATH',
       description: 'Path to a local template folder (repeatable)'
     });
@@ -100,11 +100,11 @@ export abstract class SPFxActionBase extends CommandLineAction {
   }
 
   /**
-   * Registers a {@link LocalFileSystemRepositorySource} for each `--local-template` path
+   * Registers a {@link LocalFileSystemRepositorySource} for each `--local-source` path
    * on the given manager.
    */
   protected _addLocalTemplateSources(manager: SPFxTemplateRepositoryManager): void {
-    for (const localPath of this._localTemplateParameter.values) {
+    for (const localPath of this._localSourceParameter.values) {
       this._terminal.writeLine(`Adding local template source: ${localPath}`);
       manager.addSource(new LocalFileSystemRepositorySource(localPath));
     }
@@ -127,8 +127,8 @@ export abstract class SPFxActionBase extends CommandLineAction {
 
   /**
    * Fetches templates from the manager, wrapping errors with a context-aware message.
-   * When `--local-template` was provided, the error tells the user to verify their paths.
-   * Otherwise, it suggests using `--local-template` as an offline fallback.
+   * When `--local-source` was provided, the error tells the user to verify their paths.
+   * Otherwise, it suggests using `--local-source` as an offline fallback.
    */
   protected async _fetchTemplatesAsync(
     manager: SPFxTemplateRepositoryManager
@@ -137,16 +137,16 @@ export abstract class SPFxActionBase extends CommandLineAction {
       return await manager.getTemplatesAsync();
     } catch (fetchError: unknown) {
       const fetchMessage: string = fetchError instanceof Error ? fetchError.message : String(fetchError);
-      if (this._localTemplateParameter.values.length > 0) {
+      if (this._localSourceParameter.values.length > 0) {
         throw new Error(
-          `Failed to fetch templates. Verify that the specified ${this._localTemplateParameter.longName} path(s) exist` +
+          `Failed to fetch templates. Verify that the specified ${this._localSourceParameter.longName} path(s) exist` +
             ` and that your network connection to any remote sources is available. Details: ${fetchMessage}`,
           { cause: fetchError }
         );
       } else {
         throw new Error(
           `Failed to fetch templates. If you are offline or behind a firewall, ` +
-            `use ${this._localTemplateParameter.longName} to specify a local template source. Details: ${fetchMessage}`,
+            `use ${this._localSourceParameter.longName} to specify a local template source. Details: ${fetchMessage}`,
           { cause: fetchError }
         );
       }

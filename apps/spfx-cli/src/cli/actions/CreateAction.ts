@@ -125,7 +125,7 @@ export class CreateAction extends SPFxActionBase {
 
     try {
       const options: IScaffoldProfile = {
-        localTemplateSources: this._localTemplateParameter.values,
+        localTemplateSources: this._localSourceParameter.values,
         templateName: this._templateParameter.value,
         targetDir: this._targetDirParameter.value
       };
@@ -139,10 +139,10 @@ export class CreateAction extends SPFxActionBase {
 
       const manager: SPFxTemplateRepositoryManager = new SPFxTemplateRepositoryManager();
 
-      if (this._localTemplateParameter.values.length > 0) {
+      if (this._localSourceParameter.values.length > 0) {
         if (this._spfxVersionParameter.value !== undefined) {
           terminal.writeWarningLine(
-            `${this._spfxVersionParameter.longName} is ignored when ${this._localTemplateParameter.longName} is specified.`
+            `${this._spfxVersionParameter.longName} is ignored when ${this._localSourceParameter.longName} is specified.`
           );
         }
         this._addLocalTemplateSources(manager);

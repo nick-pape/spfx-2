@@ -14,7 +14,7 @@ export class ListTemplatesAction extends SPFxActionBase {
         summary: 'Lists available SPFx templates from configured sources',
         documentation:
           'This command lists all available templates from the default GitHub source ' +
-          'and any additional sources specified with --local-template or --remote-source.'
+          'and any additional sources specified with --local-source or --remote-source.'
       },
       terminal
     );
@@ -29,7 +29,7 @@ export class ListTemplatesAction extends SPFxActionBase {
       // Additive model: default GitHub source is always added first
       this._addGitHubTemplateSource(manager);
 
-      // Additive: also include any --local-template paths
+      // Additive: also include any --local-source paths
       this._addLocalTemplateSources(manager);
 
       // Additive: also include any --remote-source URLs
