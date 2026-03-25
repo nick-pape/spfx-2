@@ -154,7 +154,8 @@ export class CreateAction extends SPFxActionBase {
 
       const templates: SPFxTemplateCollection = await this._fetchTemplatesAsync(manager);
 
-      terminal.writeLine(templates.toString());
+      const formattedTable: string = await templates.toFormattedStringAsync();
+      terminal.writeLine(formattedTable);
 
       const template: SPFxTemplate | undefined = templates.get(templateName);
 

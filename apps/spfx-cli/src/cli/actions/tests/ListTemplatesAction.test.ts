@@ -9,7 +9,12 @@ import {
   PublicGitHubRepositorySource,
   SPFxTemplateRepositoryManager
 } from '@microsoft/spfx-template-api';
-import type { SPFxTemplateCollection } from '@microsoft/spfx-template-api';
+
+const {
+  SPFxTemplateCollection: RealSPFxTemplateCollection,
+  SPFxTemplate: RealSPFxTemplate,
+  SPFxTemplateJsonFile: RealSPFxTemplateJsonFile
+} = jest.requireActual<typeof import('@microsoft/spfx-template-api')>('@microsoft/spfx-template-api');
 
 import { SPFxCommandLineParser } from '../../SPFxCommandLineParser';
 import { SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME } from '../../../utilities/github';
@@ -35,22 +40,19 @@ describe('ListTemplatesAction', () => {
     process.env = { ...originalEnv };
     delete process.env[SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME];
 
-    const mockCollection = new Map([['webpart-minimal', {}]]);
-    mockCollection.toString = (): string =>
-      [
-        '# of templates: 1',
-        '',
-        'Template Name: webpart-minimal',
-        'Description: A minimal web part template (no framework) for SPFx',
-        'Version: 0.0.1',
-        'SPFx Version: 1.22.2',
-        'Number of Files: 23',
-        ''
-      ].join('\n');
-
-    MockedManager.prototype.getTemplatesAsync.mockResolvedValue(
-      mockCollection as unknown as SPFxTemplateCollection
+    const template = new RealSPFxTemplate(
+      new RealSPFxTemplateJsonFile({
+        name: 'webpart-minimal',
+        category: 'webpart',
+        description: 'A minimal web part template (no framework) for SPFx',
+        version: '0.0.1',
+        spfxVersion: '1.22.2'
+      }),
+      new Map(Array.from({ length: 23 }, (value, i) => [`file${i}.txt`, `content${i}`]))
     );
+    const mockCollection = new RealSPFxTemplateCollection([template]);
+
+    MockedManager.prototype.getTemplatesAsync.mockResolvedValue(mockCollection);
   });
 
   afterEach(() => {

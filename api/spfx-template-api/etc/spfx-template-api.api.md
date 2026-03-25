@@ -117,6 +117,7 @@ export class SPFxTemplate {
     constructor(definition: SPFxTemplateJsonFile, files: Map<string, string | Buffer>);
     get category(): SPFxTemplateCategory;
     get description(): string | undefined;
+    get fileCount(): number;
     static fromFolderAsync(folderPath: string): Promise<SPFxTemplate>;
     static fromMemoryAsync(templateName: string, templateJsonData: unknown, fileMap: Map<string, Buffer>): Promise<SPFxTemplate>;
     get name(): string;
@@ -132,7 +133,7 @@ export type SPFxTemplateCategory = (typeof SPFX_TEMPLATE_CATEGORIES)[number];
 // @public
 export class SPFxTemplateCollection extends Map<string, SPFxTemplate> {
     constructor(templates: SPFxTemplate[]);
-    toString(): string;
+    toFormattedStringAsync(): Promise<string>;
 }
 
 // @public

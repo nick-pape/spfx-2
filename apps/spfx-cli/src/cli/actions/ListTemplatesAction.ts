@@ -37,7 +37,8 @@ export class ListTemplatesAction extends SPFxActionBase {
 
       const templates: SPFxTemplateCollection = await this._fetchTemplatesAsync(manager);
 
-      terminal.writeLine(templates.toString());
+      const formattedTable: string = await templates.toFormattedStringAsync();
+      terminal.writeLine(formattedTable);
     } catch (error: unknown) {
       const message: string = error instanceof Error ? error.message : String(error);
       terminal.writeErrorLine(`Error listing templates: ${message}`);
