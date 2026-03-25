@@ -1,0 +1,113 @@
+// Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
+// See LICENSE in the project root for license information.
+
+import { CasedString } from '../CasedString';
+
+describe(CasedString.name, () => {
+  describe('multi-word input "Hello World"', () => {
+    const cs = new CasedString('Hello World');
+
+    it('should return the raw value via toString()', () => {
+      expect(cs.toString()).toBe('Hello World');
+    });
+
+    it('should return the raw value via String() coercion', () => {
+      expect(String(cs)).toBe('Hello World');
+    });
+
+    it('should return camelCase', () => {
+      expect(cs.camel).toBe('helloWorld');
+    });
+
+    it('should return PascalCase', () => {
+      expect(cs.pascal).toBe('HelloWorld');
+    });
+
+    it('should return kebab-case', () => {
+      expect(cs.kebab).toBe('hello-world');
+    });
+
+    it('should return UPPER_SNAKE_CASE', () => {
+      expect(cs.allCaps).toBe('HELLO_WORLD');
+    });
+  });
+
+  describe('single-word input "Minimal"', () => {
+    const cs = new CasedString('Minimal');
+
+    it('should return the raw value via toString()', () => {
+      expect(cs.toString()).toBe('Minimal');
+    });
+
+    it('should return camelCase', () => {
+      expect(cs.camel).toBe('minimal');
+    });
+
+    it('should return PascalCase', () => {
+      expect(cs.pascal).toBe('Minimal');
+    });
+
+    it('should return kebab-case', () => {
+      expect(cs.kebab).toBe('minimal');
+    });
+
+    it('should return UPPER_SNAKE_CASE', () => {
+      expect(cs.allCaps).toBe('MINIMAL');
+    });
+  });
+
+  describe('kebab-case input "my-web-part"', () => {
+    const cs = new CasedString('my-web-part');
+
+    it('should return the raw value via toString()', () => {
+      expect(cs.toString()).toBe('my-web-part');
+    });
+
+    it('should return camelCase', () => {
+      expect(cs.camel).toBe('myWebPart');
+    });
+
+    it('should return PascalCase', () => {
+      expect(cs.pascal).toBe('MyWebPart');
+    });
+
+    it('should return kebab-case', () => {
+      expect(cs.kebab).toBe('my-web-part');
+    });
+
+    it('should return UPPER_SNAKE_CASE', () => {
+      expect(cs.allCaps).toBe('MY_WEB_PART');
+    });
+  });
+
+  describe('PascalCase input "DataVisualization"', () => {
+    const cs = new CasedString('DataVisualization');
+
+    it('should return the raw value via toString()', () => {
+      expect(cs.toString()).toBe('DataVisualization');
+    });
+
+    it('should return camelCase', () => {
+      expect(cs.camel).toBe('dataVisualization');
+    });
+
+    it('should return PascalCase', () => {
+      expect(cs.pascal).toBe('DataVisualization');
+    });
+
+    it('should return kebab-case', () => {
+      expect(cs.kebab).toBe('data-visualization');
+    });
+
+    it('should return UPPER_SNAKE_CASE', () => {
+      expect(cs.allCaps).toBe('DATA_VISUALIZATION');
+    });
+  });
+
+  describe('EJS template interpolation', () => {
+    it('should render raw value when used in template literal', () => {
+      const cs = new CasedString('Hello World');
+      expect(`Name: ${cs}`).toBe('Name: Hello World');
+    });
+  });
+});

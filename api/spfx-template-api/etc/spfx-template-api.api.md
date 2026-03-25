@@ -17,6 +17,16 @@ export abstract class BaseSPFxTemplateRepositorySource {
 }
 
 // @public
+export class CasedString {
+    constructor(raw: string);
+    readonly allCaps: string;
+    readonly camel: string;
+    readonly kebab: string;
+    readonly pascal: string;
+    toString(): string;
+}
+
+// @public
 export class ConfigJsonMergeHelper extends JsonMergeHelper {
     // (undocumented)
     readonly fileRelativePath: string;

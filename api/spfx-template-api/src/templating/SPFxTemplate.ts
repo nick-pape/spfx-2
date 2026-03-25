@@ -13,6 +13,7 @@ import {
   type ISPFxTemplateJson,
   type SPFxTemplateCategory
 } from './SPFxTemplateJsonFile';
+import { CasedString } from './CasedString';
 import { isBinaryFile } from './binaryFiles';
 
 /**
@@ -186,9 +187,9 @@ export class SPFxTemplate {
     destinationDir: string,
     options?: IRenderOptions
   ): Promise<MemFsEditor> {
-    // use the template "schema" to validate the context object
+    // Validate the context object against the template's contextSchema (if declared).
+    // Validation runs on the raw (pre-wrap) context so schema types remain simple strings.
     if (this._definition.contextSchema) {
-      // Build a Zod schema from the contextSchema metadata
       const schemaShape: Record<string, z.ZodString> = {};
       for (const [key, value] of Object.entries(this._definition.contextSchema)) {
         if (value.type === 'string') {
@@ -196,29 +197,37 @@ export class SPFxTemplate {
         }
       }
 
-      const contextSchema: z.ZodObject<Record<string, z.ZodString>> = z.object(schemaShape);
+      const contextSchema: z.ZodObject<Record<string, z.ZodString>> = z.object(schemaShape).passthrough();
       const validationResult: z.ZodSafeParseResult<Record<string, string>> = contextSchema.safeParse(context);
       if (!validationResult.success) {
         throw new Error(`Invalid context object: ${validationResult.error}`);
       }
     }
 
+    // Wrap every plain-string value in the context with CasedString so templates
+    // can access casing variants (e.g. <%= componentName.pascal %>) for free.
+    const wrappedContext: Record<string, unknown> = _wrapStringValues(context);
+
+    // Pre-compute a flat list of dotted-key → string entries for filename placeholder
+    // replacement (e.g. {componentName.pascal} → "HelloWorld").
+    const flatEntries: Array<[string, string]> = _flattenContext(wrappedContext);
+
     const { create: createMemFs } = await import('mem-fs');
     const { create: createEditor } = await import('mem-fs-editor');
     const memFs: MemFsEditor = createEditor(createMemFs());
 
     for (const [filename, contents] of this._files) {
-      // Render the filename by replacing {variableName} placeholders
+      // Render the filename by replacing {key} and {key.property} placeholders
       let renderedFilename: string = filename;
-      for (const [key, value] of Object.entries(context)) {
-        const placeholder: string = `{${key}}`;
-        renderedFilename = renderedFilename.split(placeholder).join(String(value));
+      for (const [dottedKey, value] of flatEntries) {
+        const placeholder: string = `{${dottedKey}}`;
+        renderedFilename = renderedFilename.split(placeholder).join(value);
       }
 
       const destination: string = `${destinationDir}/${renderedFilename}`;
       if (typeof contents === 'string') {
         // Process text file contents as EJS template
-        let rendered: string = ejs.render(contents, context, {
+        let rendered: string = ejs.render(contents, wrappedContext, {
           filename,
           cache: false
         });
@@ -251,6 +260,52 @@ export class SPFxTemplate {
       `Files: ${this.fileCount}`
     ].join('\n');
   }
+}
+
+/**
+ * Wraps every plain-string value in a context object with {@link CasedString}.
+ * Non-string values are passed through unchanged.
+ */
+function _wrapStringValues(context: object): Record<string, unknown> {
+  const wrapped: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(context)) {
+    wrapped[key] = typeof value === 'string' ? new CasedString(value) : value;
+  }
+  return wrapped;
+}
+
+/**
+ * Flattens a context object into dotted-key string entries for filename placeholder
+ * replacement. Top-level string values (CasedString instances) produce both a bare
+ * key (via toString) and dotted sub-keys for each casing property.
+ *
+ * @example
+ * ```
+ * { componentName: CasedString("Hello World"), id: "abc" }
+ * // yields:
+ * // ["componentName", "Hello World"]
+ * // ["componentName.camel", "helloWorld"]
+ * // ["componentName.pascal", "HelloWorld"]
+ * // ...
+ * // ["id", "abc"]
+ * // ["id.camel", "abc"]
+ * // ...
+ * ```
+ */
+function _flattenContext(context: Record<string, unknown>): Array<[string, string]> {
+  const entries: Array<[string, string]> = [];
+  for (const [key, value] of Object.entries(context)) {
+    if (value instanceof CasedString) {
+      entries.push([key, String(value)]);
+      entries.push([`${key}.camel`, value.camel]);
+      entries.push([`${key}.pascal`, value.pascal]);
+      entries.push([`${key}.kebab`, value.kebab]);
+      entries.push([`${key}.allCaps`, value.allCaps]);
+    } else {
+      entries.push([key, String(value)]);
+    }
+  }
+  return entries;
 }
 
 function _stripPhaseScripts(packageJsonContents: string): string {
