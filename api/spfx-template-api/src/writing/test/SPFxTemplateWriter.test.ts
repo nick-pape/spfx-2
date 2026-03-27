@@ -10,6 +10,12 @@ import { SPFxTemplateWriter } from '../SPFxTemplateWriter';
 import { SPFxScaffoldLog } from '../../logging/SPFxScaffoldLog';
 import type { IFileWriteEvent } from '../../logging/SPFxScaffoldEvent';
 
+function enoent(): Error {
+  const err: NodeJS.ErrnoException = new Error('ENOENT: no such file or directory');
+  err.code = 'ENOENT';
+  return err;
+}
+
 describe(SPFxTemplateWriter.name, () => {
   let mockEditor: MemFsEditor;
 
@@ -27,7 +33,7 @@ describe(SPFxTemplateWriter.name, () => {
     (mockEditor.dump as jest.Mock).mockReturnValue({
       'src/newFile.ts': { contents: 'new content', state: 'modified' }
     });
-    (readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+    (readFile as jest.Mock).mockRejectedValue(enoent());
 
     const writer = new SPFxTemplateWriter();
     await writer.writeAsync(mockEditor, '/target');
@@ -128,7 +134,7 @@ describe(SPFxTemplateWriter.name, () => {
       if (filePath.includes('config.json')) {
         return Promise.resolve(existingConfig);
       }
-      return Promise.reject(new Error('ENOENT'));
+      return Promise.reject(enoent());
     });
 
     const writer = new SPFxTemplateWriter();
@@ -174,6 +180,20 @@ describe(SPFxTemplateWriter.name, () => {
   });
 
   describe('error propagation', () => {
+    it('should rethrow non-ENOENT readFile errors instead of treating file as new', async () => {
+      const permError: NodeJS.ErrnoException = new Error('EACCES: permission denied');
+      permError.code = 'EACCES';
+
+      (mockEditor.dump as jest.Mock).mockReturnValue({
+        'src/file.ts': { contents: 'content', state: 'modified' }
+      });
+      (readFile as jest.Mock).mockRejectedValue(permError);
+
+      const writer = new SPFxTemplateWriter();
+
+      await expect(writer.writeAsync(mockEditor, '/target')).rejects.toThrow('EACCES');
+    });
+
     it('should propagate error when editor.commit() rejects', async () => {
       (mockEditor.dump as jest.Mock).mockReturnValue({});
       (mockEditor.commit as jest.Mock).mockRejectedValue(new Error('commit failed'));
@@ -280,7 +300,7 @@ describe(SPFxTemplateWriter.name, () => {
       (mockEditor.dump as jest.Mock).mockReturnValue({
         'src/file.ts': { contents: 'content', state: undefined }
       });
-      (readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+      (readFile as jest.Mock).mockRejectedValue(enoent());
 
       const writer = new SPFxTemplateWriter();
       await writer.writeAsync(mockEditor, '/target');
@@ -298,7 +318,7 @@ describe(SPFxTemplateWriter.name, () => {
       (mockEditor.dump as jest.Mock).mockReturnValue({
         'src/newFile.ts': { contents: 'new content', state: 'modified' }
       });
-      (readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+      (readFile as jest.Mock).mockRejectedValue(enoent());
 
       const log = new SPFxScaffoldLog();
       const writer = new SPFxTemplateWriter();
@@ -377,11 +397,11 @@ describe(SPFxTemplateWriter.name, () => {
       });
 
       (readFile as jest.Mock).mockImplementation((filePath: string) => {
-        if (filePath.includes('brand-new')) return Promise.reject(new Error('ENOENT'));
+        if (filePath.includes('brand-new')) return Promise.reject(enoent());
         if (filePath.includes('package.json')) return Promise.resolve(existingPkg);
         if (filePath.includes('unchanged')) return Promise.resolve(sameContent);
         if (filePath.includes('no-helper')) return Promise.resolve('{"y":2}');
-        return Promise.reject(new Error('ENOENT'));
+        return Promise.reject(enoent());
       });
 
       const log = new SPFxScaffoldLog();
@@ -402,7 +422,7 @@ describe(SPFxTemplateWriter.name, () => {
       (mockEditor.dump as jest.Mock).mockReturnValue({
         'src/file.ts': { contents: 'content', state: 'modified' }
       });
-      (readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+      (readFile as jest.Mock).mockRejectedValue(enoent());
 
       const writer = new SPFxTemplateWriter();
       // No log passed — should work exactly as before

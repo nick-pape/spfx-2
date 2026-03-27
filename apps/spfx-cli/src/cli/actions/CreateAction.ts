@@ -240,22 +240,28 @@ export class CreateAction extends SPFxActionBase {
       await writer.writeAsync(fs, targetDir, { log });
 
       const packageManager: PackageManager | 'none' = this._packageManagerParameter.value;
-      if (packageManager !== 'none') {
-        log.append({
-          kind: 'package-manager-selected',
-          timestamp: '',
-          packageManager,
-          targetDir
-        });
+      log.append({
+        kind: 'package-manager-selected',
+        timestamp: '',
+        packageManager,
+        targetDir
+      });
 
-        const exitCode: number = await _runInstallAsync(packageManager, targetDir, terminal);
+      if (packageManager !== 'none') {
+        const installResult: IInstallResult = await _runInstallAsync(packageManager, targetDir, terminal);
 
         log.append({
           kind: 'package-manager-install-completed',
           timestamp: '',
           packageManager,
-          exitCode
+          exitCode: installResult.exitCode ?? -1
         });
+
+        if (installResult.signal != null) {
+          throw new Error(`${packageManager} install was terminated by signal ${installResult.signal}`);
+        } else if (installResult.exitCode !== 0) {
+          throw new Error(`${packageManager} install exited with code ${installResult.exitCode}`);
+        }
       }
     } catch (error: unknown) {
       const message: string = error instanceof Error ? error.message : String(error);
@@ -265,17 +271,24 @@ export class CreateAction extends SPFxActionBase {
   }
 }
 
+interface IInstallResult {
+  // eslint-disable-next-line @rushstack/no-new-null
+  exitCode: number | null;
+  // eslint-disable-next-line @rushstack/no-new-null
+  signal: string | null;
+}
+
 /**
  * Spawns the chosen package manager's install command in targetDir and waits for it to finish.
  * Files are already written before this is called, so a failure here does not undo scaffolding.
  *
- * @returns The process exit code (0 on success).
+ * @returns The exit code and signal so the caller can log the outcome before deciding to throw.
  */
 async function _runInstallAsync(
   packageManager: PackageManager,
   targetDir: string,
   terminal: Terminal
-): Promise<number> {
+): Promise<IInstallResult> {
   terminal.writeLine(`Running ${packageManager} install in ${targetDir}...`);
 
   const child: ChildProcess = Executable.spawn(packageManager, ['install'], {
@@ -288,14 +301,11 @@ async function _runInstallAsync(
     throwOnSignal: false
   });
 
-  if (signal != null) {
-    throw new Error(`${packageManager} install was terminated by signal ${signal}`);
-  } else if (exitCode !== 0) {
-    throw new Error(`${packageManager} install exited with code ${exitCode}`);
+  if (exitCode === 0) {
+    terminal.writeLine(`${packageManager} install completed successfully.`);
   }
 
-  terminal.writeLine(`${packageManager} install completed successfully.`);
-  return exitCode;
+  return { exitCode, signal };
 }
 
 /**

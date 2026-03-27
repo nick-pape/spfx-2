@@ -91,10 +91,13 @@ export class SPFxTemplateWriter {
       let existingContent: string;
       try {
         existingContent = await readFile(absolutePath, 'utf-8');
-      } catch {
-        // File does not exist — new file, let commit write it as-is
-        this._logFileWrite(log, relativePath, 'new');
-        continue;
+      } catch (error: unknown) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+          // File does not exist — new file, let commit write it as-is
+          this._logFileWrite(log, relativePath, 'new');
+          continue;
+        }
+        throw error;
       }
 
       // File already exists on disk — attempt merge if content differs

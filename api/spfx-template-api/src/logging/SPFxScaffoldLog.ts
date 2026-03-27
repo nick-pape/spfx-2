@@ -26,9 +26,9 @@ export class SPFxScaffoldLog {
     this._events.push(event);
   }
 
-  /** All events in insertion order. */
+  /** All events in insertion order (returns a defensive copy). */
   public get events(): readonly SPFxScaffoldEvent[] {
-    return this._events;
+    return this._events.slice();
   }
 
   /**
@@ -53,7 +53,7 @@ export class SPFxScaffoldLog {
     }
     const lines: string[] = content.split('\n').filter((line) => line.length > 0);
     for (const line of lines) {
-      log._events.push(JSON.parse(line) as SPFxScaffoldEvent);
+      log.append(JSON.parse(line) as SPFxScaffoldEvent);
     }
     return log;
   }
