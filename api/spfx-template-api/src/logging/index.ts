@@ -10,4 +10,4 @@ export {
   type IPackageManagerInstallCompletedEvent,
   type SPFxScaffoldEvent
 } from './SPFxScaffoldEvent';
-export { SPFxScaffoldLog } from './SPFxScaffoldLog';
+export { SPFxScaffoldLog, type SPFxScaffoldEventInput } from './SPFxScaffoldLog';

@@ -43,6 +43,7 @@ export interface ICasedString {
 export interface IFileWriteEvent extends ISPFxScaffoldEventBase {
     // (undocumented)
     kind: 'file-write';
+    // (undocumented)
     mergeHelper?: string;
     // (undocumented)
     outcome: FileWriteOutcome;
@@ -64,6 +65,8 @@ export interface IPackageManagerInstallCompletedEvent extends ISPFxScaffoldEvent
     kind: 'package-manager-install-completed';
     // (undocumented)
     packageManager: string;
+    // (undocumented)
+    signal?: string;
 }
 
 // @public
@@ -188,12 +191,19 @@ export type SPFxRepositorySource = LocalFileSystemRepositorySource | PublicGitHu
 // @public
 export type SPFxScaffoldEvent = ITemplateRenderedEvent | IPackageManagerSelectedEvent | IFileWriteEvent | IPackageManagerInstallCompletedEvent;
 
+// Warning: (ae-forgotten-export) The symbol "_DistributiveOmit" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type SPFxScaffoldEventInput = _DistributiveOmit<SPFxScaffoldEvent, 'timestamp'> & {
+    timestamp?: string;
+};
+
 // @public
 export class SPFxScaffoldLog {
-    append(event: SPFxScaffoldEvent): void;
+    append(event: SPFxScaffoldEventInput): void;
     get events(): readonly SPFxScaffoldEvent[];
     static fromJsonl(content: string): SPFxScaffoldLog;
-    getEventsByKind<K extends SPFxScaffoldEvent['kind']>(kind: K): Extract<SPFxScaffoldEvent, {
+    getEventsOfKind<K extends SPFxScaffoldEvent['kind']>(kind: K): Extract<SPFxScaffoldEvent, {
         kind: K;
     }>[];
     toJsonl(): string;

@@ -16,6 +16,16 @@ function enoent(): Error {
   return err;
 }
 
+/** Strip auto-generated timestamps from log events so snapshots are deterministic. */
+function snapshotLog(log: SPFxScaffoldLog): object[] {
+  return log.events.map((e) => {
+    const copy: Record<string, unknown> = { ...e };
+    // eslint-disable-next-line dot-notation
+    delete copy['timestamp'];
+    return copy;
+  });
+}
+
 describe(SPFxTemplateWriter.name, () => {
   let mockEditor: MemFsEditor;
 
@@ -324,11 +334,12 @@ describe(SPFxTemplateWriter.name, () => {
       const writer = new SPFxTemplateWriter();
       await writer.writeAsync(mockEditor, '/target', { log });
 
-      const events: IFileWriteEvent[] = log.getEventsByKind('file-write');
+      const events: IFileWriteEvent[] = log.getEventsOfKind('file-write');
       expect(events.length).toBe(1);
       expect(events[0]!.relativePath).toBe('src/newFile.ts');
       expect(events[0]!.outcome).toBe('new');
       expect(events[0]!.mergeHelper).toBeUndefined();
+      expect(snapshotLog(log)).toMatchSnapshot();
     });
 
     it('should record an "unchanged" file-write event when content matches', async () => {
@@ -342,10 +353,11 @@ describe(SPFxTemplateWriter.name, () => {
       const writer = new SPFxTemplateWriter();
       await writer.writeAsync(mockEditor, '/target', { log });
 
-      const events: IFileWriteEvent[] = log.getEventsByKind('file-write');
+      const events: IFileWriteEvent[] = log.getEventsOfKind('file-write');
       expect(events.length).toBe(1);
       expect(events[0]!.relativePath).toBe('some/file.json');
       expect(events[0]!.outcome).toBe('unchanged');
+      expect(snapshotLog(log)).toMatchSnapshot();
     });
 
     it('should record a "merged" file-write event with mergeHelper name', async () => {
@@ -361,11 +373,12 @@ describe(SPFxTemplateWriter.name, () => {
       const writer = new SPFxTemplateWriter();
       await writer.writeAsync(mockEditor, '/target', { log });
 
-      const events: IFileWriteEvent[] = log.getEventsByKind('file-write');
+      const events: IFileWriteEvent[] = log.getEventsOfKind('file-write');
       expect(events.length).toBe(1);
       expect(events[0]!.relativePath).toBe('package.json');
       expect(events[0]!.outcome).toBe('merged');
       expect(events[0]!.mergeHelper).toBe('package.json');
+      expect(snapshotLog(log)).toMatchSnapshot();
     });
 
     it('should record a "preserved" file-write event when no merge helper exists', async () => {
@@ -378,10 +391,11 @@ describe(SPFxTemplateWriter.name, () => {
       const writer = new SPFxTemplateWriter();
       await writer.writeAsync(mockEditor, '/target', { log });
 
-      const events: IFileWriteEvent[] = log.getEventsByKind('file-write');
+      const events: IFileWriteEvent[] = log.getEventsOfKind('file-write');
       expect(events.length).toBe(1);
       expect(events[0]!.relativePath).toBe('some/unknown/file.json');
       expect(events[0]!.outcome).toBe('preserved');
+      expect(snapshotLog(log)).toMatchSnapshot();
     });
 
     it('should record events for multiple files with correct outcomes', async () => {
@@ -408,7 +422,7 @@ describe(SPFxTemplateWriter.name, () => {
       const writer = new SPFxTemplateWriter();
       await writer.writeAsync(mockEditor, '/target', { log });
 
-      const events: IFileWriteEvent[] = log.getEventsByKind('file-write');
+      const events: IFileWriteEvent[] = log.getEventsOfKind('file-write');
       expect(events.length).toBe(4);
 
       const outcomes: Map<string, string> = new Map(events.map((e) => [e.relativePath, e.outcome]));
@@ -416,6 +430,7 @@ describe(SPFxTemplateWriter.name, () => {
       expect(outcomes.get('package.json')).toBe('merged');
       expect(outcomes.get('unchanged.txt')).toBe('unchanged');
       expect(outcomes.get('no-helper.json')).toBe('preserved');
+      expect(snapshotLog(log)).toMatchSnapshot();
     });
 
     it('should not error when log is not provided (backward-compatible)', async () => {
@@ -441,7 +456,7 @@ describe(SPFxTemplateWriter.name, () => {
       const writer = new SPFxTemplateWriter();
       await writer.writeAsync(mockEditor, '/target', { log });
 
-      expect(log.getEventsByKind('file-write').length).toBe(0);
+      expect(log.getEventsOfKind('file-write').length).toBe(0);
     });
   });
 });

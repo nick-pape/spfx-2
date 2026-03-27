@@ -47,5 +47,6 @@ export {
   type IFileWriteEvent,
   type IPackageManagerInstallCompletedEvent,
   type SPFxScaffoldEvent,
-  SPFxScaffoldLog
+  SPFxScaffoldLog,
+  type SPFxScaffoldEventInput
 } from './logging/index';

@@ -128,9 +128,9 @@ describe(SPFxScaffoldLog.name, () => {
     });
   });
 
-  // ---- getEventsByKind ---------------------------------------------------
+  // ---- getEventsOfKind ---------------------------------------------------
 
-  describe('getEventsByKind', () => {
+  describe('getEventsOfKind', () => {
     it('returns only events of the requested kind', () => {
       const log: SPFxScaffoldLog = new SPFxScaffoldLog();
       const rendered: ITemplateRenderedEvent = makeTemplateRenderedEvent();
@@ -143,7 +143,7 @@ describe(SPFxScaffoldLog.name, () => {
       log.append(pm);
       log.append(file2);
 
-      const fileEvents: IFileWriteEvent[] = log.getEventsByKind('file-write');
+      const fileEvents: IFileWriteEvent[] = log.getEventsOfKind('file-write');
       expect(fileEvents).toEqual([file1, file2]);
     });
 
@@ -151,7 +151,7 @@ describe(SPFxScaffoldLog.name, () => {
       const log: SPFxScaffoldLog = new SPFxScaffoldLog();
       log.append(makeFileWriteEvent());
 
-      expect(log.getEventsByKind('template-rendered')).toEqual([]);
+      expect(log.getEventsOfKind('template-rendered')).toEqual([]);
     });
   });
 
@@ -234,7 +234,7 @@ describe(SPFxScaffoldLog.name, () => {
       log.append(event);
 
       const restored: SPFxScaffoldLog = SPFxScaffoldLog.fromJsonl(log.toJsonl());
-      const fileEvents: IFileWriteEvent[] = restored.getEventsByKind('file-write');
+      const fileEvents: IFileWriteEvent[] = restored.getEventsOfKind('file-write');
 
       expect(fileEvents.length).toBe(1);
       expect(fileEvents[0]!.mergeHelper).toBe('package.json');
@@ -245,7 +245,7 @@ describe(SPFxScaffoldLog.name, () => {
       log.append(makeFileWriteEvent({ outcome: 'new' }));
 
       const restored: SPFxScaffoldLog = SPFxScaffoldLog.fromJsonl(log.toJsonl());
-      const fileEvents: IFileWriteEvent[] = restored.getEventsByKind('file-write');
+      const fileEvents: IFileWriteEvent[] = restored.getEventsOfKind('file-write');
 
       expect(fileEvents[0]!.mergeHelper).toBeUndefined();
     });

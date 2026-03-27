@@ -32,6 +32,20 @@ export interface IWriteOptions {
   log?: SPFxScaffoldLog;
 }
 
+function _logFileWrite(
+  log: SPFxScaffoldLog | undefined,
+  relativePath: string,
+  outcome: FileWriteOutcome,
+  mergeHelper?: string
+): void {
+  log?.append({
+    kind: 'file-write',
+    relativePath,
+    outcome,
+    mergeHelper
+  });
+}
+
 /**
  * Orchestrates writing template output to disk, routing modified files
  * through specialized merge helpers so that config files are intelligently
@@ -94,7 +108,7 @@ export class SPFxTemplateWriter {
       } catch (error: unknown) {
         if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
           // File does not exist — new file, let commit write it as-is
-          this._logFileWrite(log, relativePath, 'new');
+          _logFileWrite(log, relativePath, 'new');
           continue;
         }
         throw error;
@@ -102,7 +116,7 @@ export class SPFxTemplateWriter {
 
       // File already exists on disk — attempt merge if content differs
       if (existingContent === entry.contents) {
-        this._logFileWrite(log, relativePath, 'unchanged');
+        _logFileWrite(log, relativePath, 'unchanged');
         continue;
       }
 
@@ -110,33 +124,15 @@ export class SPFxTemplateWriter {
       if (helper) {
         const mergedContent: string = helper.merge(existingContent, entry.contents);
         editor.write(absolutePath, mergedContent);
-        this._logFileWrite(log, relativePath, 'merged', helper.fileRelativePath);
+        _logFileWrite(log, relativePath, 'merged', helper.fileRelativePath);
       } else {
         // No merge helper and content differs — preserve the existing version
         // by writing it into the editor so commit() does not overwrite it.
         editor.write(absolutePath, existingContent);
-        this._logFileWrite(log, relativePath, 'preserved');
+        _logFileWrite(log, relativePath, 'preserved');
       }
     }
 
     await editor.commit();
-  }
-
-  private _logFileWrite(
-    log: SPFxScaffoldLog | undefined,
-    relativePath: string,
-    outcome: FileWriteOutcome,
-    mergeHelper?: string
-  ): void {
-    if (!log) {
-      return;
-    }
-    log.append({
-      kind: 'file-write',
-      timestamp: '',
-      relativePath,
-      outcome,
-      ...(mergeHelper !== undefined ? { mergeHelper } : {})
-    });
   }
 }

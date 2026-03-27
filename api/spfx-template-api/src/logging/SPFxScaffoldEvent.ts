@@ -54,7 +54,10 @@ export interface IFileWriteEvent extends ISPFxScaffoldEventBase {
   kind: 'file-write';
   relativePath: string;
   outcome: FileWriteOutcome;
-  /** Present only when `outcome` is `'merged'`. */
+  /**
+   * @remarks
+   * Present only when `outcome` is `'merged'`.
+   */
   mergeHelper?: string;
 }
 
@@ -67,6 +70,7 @@ export interface IPackageManagerInstallCompletedEvent extends ISPFxScaffoldEvent
   kind: 'package-manager-install-completed';
   packageManager: string;
   exitCode: number;
+  signal?: string;
 }
 
 /**

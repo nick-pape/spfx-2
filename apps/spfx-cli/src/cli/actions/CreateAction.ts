@@ -217,7 +217,6 @@ export class CreateAction extends SPFxActionBase {
 
       log.append({
         kind: 'template-rendered',
-        timestamp: '',
         templateName: template.name,
         templateVersion: template.version,
         spfxVersion: template.spfxVersion,
@@ -232,7 +231,6 @@ export class CreateAction extends SPFxActionBase {
       const packageManager: PackageManager | 'none' = this._packageManagerParameter.value;
       log.append({
         kind: 'package-manager-selected',
-        timestamp: '',
         packageManager,
         targetDir
       });
@@ -242,9 +240,9 @@ export class CreateAction extends SPFxActionBase {
 
         log.append({
           kind: 'package-manager-install-completed',
-          timestamp: '',
           packageManager,
-          exitCode: installResult.exitCode ?? -1
+          exitCode: installResult.exitCode ?? -1,
+          signal: installResult.signal ?? undefined
         });
 
         if (installResult.signal != null) {

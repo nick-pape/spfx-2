@@ -3,6 +3,18 @@
 
 import type { SPFxScaffoldEvent } from './SPFxScaffoldEvent';
 
+// Distributes Omit over each member of a union instead of collapsing it.
+type _DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
+
+/**
+ * An event with `timestamp` made optional so callers don't need to provide it.
+ *
+ * @public
+ */
+export type SPFxScaffoldEventInput = _DistributiveOmit<SPFxScaffoldEvent, 'timestamp'> & {
+  timestamp?: string;
+};
+
 /**
  * A structured log of events emitted during a scaffolding operation.
  *
@@ -16,17 +28,15 @@ export class SPFxScaffoldLog {
   private readonly _events: SPFxScaffoldEvent[] = [];
 
   /**
-   * Appends an event to the log.  If `event.timestamp` is an empty string
+   * Appends an event to the log.  If `timestamp` is omitted or empty
    * it will be replaced with the current ISO 8601 timestamp.
    */
-  public append(event: SPFxScaffoldEvent): void {
-    if (event.timestamp === '') {
-      event = { ...event, timestamp: new Date().toISOString() };
-    }
-    this._events.push(event);
+  public append(event: SPFxScaffoldEventInput): void {
+    const timestamp: string = event.timestamp || new Date().toISOString();
+    this._events.push({ ...event, timestamp } as SPFxScaffoldEvent);
   }
 
-  /** All events in insertion order (returns a defensive copy). */
+  /** All events in insertion order (returns a defensive shallow copy). */
   public get events(): readonly SPFxScaffoldEvent[] {
     return this._events.slice();
   }
@@ -34,7 +44,7 @@ export class SPFxScaffoldLog {
   /**
    * Returns only events whose `kind` matches the given value.
    */
-  public getEventsByKind<K extends SPFxScaffoldEvent['kind']>(
+  public getEventsOfKind<K extends SPFxScaffoldEvent['kind']>(
     kind: K
   ): Extract<SPFxScaffoldEvent, { kind: K }>[] {
     return this._events.filter((e): e is Extract<SPFxScaffoldEvent, { kind: K }> => e.kind === kind);
@@ -51,9 +61,14 @@ export class SPFxScaffoldLog {
     if (content.length === 0) {
       return log;
     }
-    const lines: string[] = content.split('\n').filter((line) => line.length > 0);
-    for (const line of lines) {
-      log.append(JSON.parse(line) as SPFxScaffoldEvent);
+    let start: number = 0;
+    for (let i: number = 0; i <= content.length; i++) {
+      if (i === content.length || content[i] === '\n') {
+        if (i > start) {
+          log.append(JSON.parse(content.substring(start, i)) as SPFxScaffoldEvent);
+        }
+        start = i + 1;
+      }
     }
     return log;
   }
