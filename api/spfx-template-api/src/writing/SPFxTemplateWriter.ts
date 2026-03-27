@@ -56,7 +56,12 @@ export class SPFxTemplateWriter {
 
       // Guard against path traversal: resolve the full path and verify it stays under targetDir
       const absolutePath: string = path.resolve(resolvedTargetDir, relativePath);
-      if (!absolutePath.startsWith(resolvedTargetDir + path.sep) && absolutePath !== resolvedTargetDir) {
+      const relativeToTarget: string = path.relative(resolvedTargetDir, absolutePath);
+      if (
+        path.isAbsolute(relativeToTarget) ||
+        relativeToTarget === '..' ||
+        relativeToTarget.startsWith('..' + path.sep)
+      ) {
         throw new Error(`Template path "${rawRelativePath}" escapes the target directory`);
       }
 
