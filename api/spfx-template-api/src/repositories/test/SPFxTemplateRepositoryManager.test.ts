@@ -394,7 +394,7 @@ describe(SPFxTemplateRepositoryManager.name, () => {
       const manager = new SPFxTemplateRepositoryManager();
       manager.addSource(new MockRepositorySource('local', [template]));
 
-      await expect(manager.getTemplatesAsync()).rejects.toThrow(/npm install -g @microsoft\/spfx-cli@latest/);
+      await expect(manager.getTemplatesAsync()).rejects.toThrow(/Please update your SPFx tooling/);
     });
 
     it('should handle duplicate template names (last one wins)', async () => {

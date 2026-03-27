@@ -54,16 +54,15 @@ export interface ISPFxTemplateJson {
   contextSchema?: Record<string, { type: 'string'; description: string }>;
   /**
    * Optional minimum engine version required to process this template.
-   * When set, the engine will compare this against ENGINE_VERSION and reject
-   * the template if the engine is too old. Must be a valid semver string.
+   * When set, the template engine's orchestrator (for example,
+   * {@link SPFxTemplateRepositoryManager}) will compare this value against
+   * ENGINE_VERSION and reject the template if the engine is too old. Must be
+   * a valid semver string. Callers that construct templates directly are
+   * responsible for enforcing this contract themselves, if desired.
    */
   minimumEngineVersion?: string;
 }
 
-/**
- * @public
- * The schema for validating SPFx template definition files (template.json).
- */
 /**
  * The set of field names recognized by this version of the engine.
  * Used to detect unknown fields for forward-compatibility warnings.

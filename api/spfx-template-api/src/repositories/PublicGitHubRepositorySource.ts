@@ -47,7 +47,7 @@ export async function _parseTemplatesFromFileMapAsync(
   }
   if (allUnknownFields.size > 0) {
     terminal.writeWarningLine(
-      `Template(s) contain unrecognized fields: ${[...allUnknownFields].join(', ')}. ` +
+      `Template(s) contain unrecognized fields: ${[...allUnknownFields].sort().join(', ')}. ` +
         `You may need to update your CLI to the latest version.`
     );
   }

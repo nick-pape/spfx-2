@@ -61,7 +61,7 @@ export class SPFxTemplateRepositoryManager {
       throw new Error(
         `${incompatible.length} template(s) require engine version ${highestRequired} or later, ` +
           `but your version is ${ENGINE_VERSION}. ` +
-          `Run \`npm install -g @microsoft/spfx-cli@latest\` to upgrade.`
+          `Please update your SPFx tooling (for example, @microsoft/spfx-cli and/or @microsoft/spfx-template-api) to a compatible version.`
       );
     }
 
