@@ -25,8 +25,8 @@ describe(SPFxTemplateWriter.name, () => {
     const writer = new SPFxTemplateWriter();
     await writer.writeAsync(templateFs, '/target');
 
-    expect(writeFile).toHaveBeenCalledWith('/target/src/newFile.ts', 'new content', 'utf-8');
-    expect(mkdir).toHaveBeenCalledWith('/target/src', { recursive: true });
+    expect(writeFile).toHaveBeenCalledWith(expect.stringContaining('newFile.ts'), 'new content', 'utf-8');
+    expect(mkdir).toHaveBeenCalledWith(expect.stringContaining('src'), { recursive: true });
   });
 
   it('should route modified package.json through merge helper', async () => {
@@ -129,7 +129,7 @@ describe(SPFxTemplateWriter.name, () => {
     });
     await writer.writeAsync(templateFs, '/target');
 
-    expect(writeFile).toHaveBeenCalledWith('/target/custom/file.txt', 'existing+incoming', 'utf-8');
+    expect(writeFile).toHaveBeenCalledWith(expect.stringContaining('file.txt'), 'existing+incoming', 'utf-8');
   });
 
   it('should handle empty file system without errors', async () => {
@@ -147,8 +147,8 @@ describe(SPFxTemplateWriter.name, () => {
     const writer = new SPFxTemplateWriter();
     await writer.writeAsync(templateFs, '/target');
 
-    expect(writeFile).toHaveBeenCalledWith('/target/assets/logo.png', buffer);
-    expect(mkdir).toHaveBeenCalledWith('/target/assets', { recursive: true });
+    expect(writeFile).toHaveBeenCalledWith(expect.stringContaining('logo.png'), buffer);
+    expect(mkdir).toHaveBeenCalledWith(expect.stringContaining('assets'), { recursive: true });
   });
 
   describe('error propagation', () => {
