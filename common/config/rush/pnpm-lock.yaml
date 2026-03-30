@@ -40,6 +40,9 @@ importers:
       ejs:
         specifier: ^3.1.10
         version: 3.1.10
+      lodash:
+        specifier: ^4.17.23
+        version: 4.17.23
       semver:
         specifier: ~7.7.4
         version: 7.7.4
