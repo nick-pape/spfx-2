@@ -59,7 +59,7 @@ export class CreateAction extends SPFxActionBase {
     super(
       {
         actionName: 'create',
-        summary: 'Scaffolds an SPFx component into the current folder',
+        summary: 'Scaffolds a new SPFx component',
         documentation: 'This command creates a new SPFx component.'
       },
       terminal

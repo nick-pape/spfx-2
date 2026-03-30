@@ -61,7 +61,7 @@ CLI for managing SharePoint Framework (SPFx) projects
 
 Positional arguments:
   <command>
-    create        Scaffolds an SPFx component into the current folder
+    create        Scaffolds a new SPFx component
     list-templates
                   Lists available SPFx templates from configured sources
 
