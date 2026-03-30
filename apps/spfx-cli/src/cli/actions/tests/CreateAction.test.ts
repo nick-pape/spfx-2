@@ -38,7 +38,7 @@ const MockedLocal = LocalFileSystemRepositorySource as jest.MockedClass<
 >;
 const MockedExecutable = Executable as unknown as { spawn: jest.Mock; waitForExitAsync: jest.Mock };
 
-// Minimal mock ITemplateFileSystem for a happy-path run
+// Minimal mock TemplateFileSystem for a happy-path run
 const mockTemplateFs = { files: new Map(), read: jest.fn(), write: jest.fn() };
 
 const REQUIRED_ARGS: string[] = [
