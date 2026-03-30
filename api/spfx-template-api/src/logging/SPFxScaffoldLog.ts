@@ -3,17 +3,18 @@
 
 import type { SPFxScaffoldEvent } from './SPFxScaffoldEvent';
 
-// Distributes Omit over each member of a union instead of collapsing it.
-type _DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
-
 /**
  * An event with `timestamp` made optional so callers don't need to provide it.
  *
+ * Distributes `Omit` over each member of the `SPFxScaffoldEvent` union instead of collapsing it.
+ *
  * @public
  */
-export type SPFxScaffoldEventInput = _DistributiveOmit<SPFxScaffoldEvent, 'timestamp'> & {
-  timestamp?: string;
-};
+export type SPFxScaffoldEventInput = SPFxScaffoldEvent extends infer E
+  ? E extends SPFxScaffoldEvent
+    ? Omit<E, 'timestamp'> & { timestamp?: string }
+    : never
+  : never;
 
 /**
  * A structured log of events emitted during a scaffolding operation.
@@ -65,7 +66,13 @@ export class SPFxScaffoldLog {
     for (let i: number = 0; i <= content.length; i++) {
       if (i === content.length || content[i] === '\n') {
         if (i > start) {
-          log.append(JSON.parse(content.substring(start, i)) as SPFxScaffoldEvent);
+          let line: string = content.substring(start, i);
+          if (line.endsWith('\r')) {
+            line = line.slice(0, -1);
+          }
+          if (line.length > 0) {
+            log.append(JSON.parse(line) as SPFxScaffoldEvent);
+          }
         }
         start = i + 1;
       }

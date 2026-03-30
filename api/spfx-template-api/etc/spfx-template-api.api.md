@@ -191,12 +191,10 @@ export type SPFxRepositorySource = LocalFileSystemRepositorySource | PublicGitHu
 // @public
 export type SPFxScaffoldEvent = ITemplateRenderedEvent | IPackageManagerSelectedEvent | IFileWriteEvent | IPackageManagerInstallCompletedEvent;
 
-// Warning: (ae-forgotten-export) The symbol "_DistributiveOmit" needs to be exported by the entry point index.d.ts
-//
 // @public
-export type SPFxScaffoldEventInput = _DistributiveOmit<SPFxScaffoldEvent, 'timestamp'> & {
+export type SPFxScaffoldEventInput = SPFxScaffoldEvent extends infer E ? E extends SPFxScaffoldEvent ? Omit<E, 'timestamp'> & {
     timestamp?: string;
-};
+} : never : never;
 
 // @public
 export class SPFxScaffoldLog {

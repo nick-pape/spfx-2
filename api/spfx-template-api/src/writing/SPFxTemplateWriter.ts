@@ -38,12 +38,23 @@ function _logFileWrite(
   outcome: FileWriteOutcome,
   mergeHelper?: string
 ): void {
-  log?.append({
+  if (!log) {
+    return;
+  }
+  const event: {
+    kind: 'file-write';
+    relativePath: string;
+    outcome: FileWriteOutcome;
+    mergeHelper?: string;
+  } = {
     kind: 'file-write',
     relativePath,
-    outcome,
-    mergeHelper
-  });
+    outcome
+  };
+  if (mergeHelper !== undefined) {
+    event.mergeHelper = mergeHelper;
+  }
+  log.append(event);
 }
 
 /**
