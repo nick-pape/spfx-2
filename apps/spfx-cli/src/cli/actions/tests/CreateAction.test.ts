@@ -502,7 +502,7 @@ describe('CreateAction', () => {
       expect(MockedExecutable.spawn).toHaveBeenCalledWith(
         'npm',
         ['install'],
-        expect.objectContaining({ currentWorkingDirectory: '/tmp/test/test', stdio: 'inherit' })
+        expect.objectContaining({ currentWorkingDirectory: path.join('/tmp/test', 'test'), stdio: 'inherit' })
       );
     });
 
