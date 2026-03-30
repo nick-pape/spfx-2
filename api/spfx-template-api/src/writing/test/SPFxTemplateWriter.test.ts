@@ -7,6 +7,7 @@ jest.mock('@rushstack/node-core-library', () => {
     ...actual,
     FileSystem: {
       readFileAsync: jest.fn(),
+      readFileToBufferAsync: jest.fn(),
       writeFileAsync: jest.fn().mockResolvedValue(undefined),
       ensureFolderAsync: jest.fn().mockResolvedValue(undefined),
       isNotExistError: actual.FileSystem.isNotExistError
@@ -161,6 +162,9 @@ describe(SPFxTemplateWriter.name, () => {
   it('should write binary files directly without merge', async () => {
     const buffer = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
     templateFs.write('assets/logo.png', buffer);
+    mockFileSystem.readFileToBufferAsync.mockRejectedValue(
+      Object.assign(new Error('ENOENT'), { code: 'ENOENT' })
+    );
 
     const writer = new SPFxTemplateWriter();
     await writer.writeAsync(templateFs, '/target');
