@@ -143,9 +143,10 @@ export class CreateAction extends SPFxActionBase {
       const targetDir: string =
         rawTargetDir && rawTargetDir.length > 0 ? rawTargetDir : `${process.cwd()}/${solutionName}`;
 
+      const templateName: string = this._templateParameter.value;
       const options: IScaffoldProfile = {
         localTemplateSources: this._localSourceParameter.values,
-        templateName: this._templateParameter.value,
+        templateName,
         targetDir
       };
 
@@ -154,7 +155,6 @@ export class CreateAction extends SPFxActionBase {
       if (!validationResult.success) {
         throw new Error(`Invalid scaffold profile: ${JSON.stringify(validationResult.error.issues)}`);
       }
-      const templateName: string = options.templateName;
 
       const manager: SPFxTemplateRepositoryManager = new SPFxTemplateRepositoryManager();
 
