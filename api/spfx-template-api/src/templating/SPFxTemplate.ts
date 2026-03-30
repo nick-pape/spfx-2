@@ -65,7 +65,7 @@ export class SPFxTemplate {
 
   /**
    * Gets the version of the template as a string.
-   * This is a semver "X.Y.Z" string; pre-release and build metadata are not supported.
+   * Must be a valid semver string (e.g. "1.0.0"). Pre-release and build metadata are permitted.
    */
   public get version(): string {
     return this._definition.version;

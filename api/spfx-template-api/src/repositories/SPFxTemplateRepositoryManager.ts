@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-import { lt as semverLt } from 'semver';
+import { lt as semverLt, valid as semverValid } from 'semver';
 
 import { ENGINE_VERSION } from '../engineVersion';
 import type { SPFxTemplate } from '../templating/SPFxTemplate';
@@ -49,10 +49,18 @@ export class SPFxTemplateRepositoryManager {
 
     for (const template of allTemplates) {
       const required: string | undefined = template.minimumEngineVersion;
-      if (required && semverLt(ENGINE_VERSION, required)) {
-        incompatible.push({ name: template.name, required });
-        if (!highestRequired || semverLt(highestRequired, required)) {
-          highestRequired = required;
+      if (required) {
+        if (!semverValid(required)) {
+          throw new Error(
+            `Template "${template.name}" declares an invalid minimumEngineVersion: "${required}". ` +
+              `Expected a valid semver string (e.g. "1.0.0").`
+          );
+        }
+        if (semverLt(ENGINE_VERSION, required)) {
+          incompatible.push({ name: template.name, required });
+          if (!highestRequired || semverLt(highestRequired, required)) {
+            highestRequired = required;
+          }
         }
       }
     }
