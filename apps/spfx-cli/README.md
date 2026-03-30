@@ -21,7 +21,7 @@ spfx create \
   --component-name "Hello World"
 ```
 
-This downloads the `webpart-react` template from the [SharePoint/spfx](https://github.com/SharePoint/spfx) template repository and scaffolds a React-based web part into the current directory.
+This downloads the `webpart-react` template from the [SharePoint/spfx](https://github.com/SharePoint/spfx) template repository and scaffolds a React-based web part into a `hello-world` subfolder.
 
 ---
 
