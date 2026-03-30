@@ -27,6 +27,9 @@ export class ConfigJsonMergeHelper extends JsonMergeHelper {
 export function createCasedString(raw: string): ICasedString;
 
 // @public
+export const ENGINE_VERSION: string;
+
+// @public
 export interface ICasedString {
     readonly allCaps: string;
     readonly camel: string;
@@ -65,6 +68,7 @@ export interface ISPFxTemplateJson {
         description: string;
     }>;
     description?: string;
+    minimumEngineVersion?: string;
     name: string;
     spfxVersion: string;
     version: string;
@@ -136,10 +140,12 @@ export class SPFxTemplate {
     get fileCount(): number;
     static fromFolderAsync(folderPath: string): Promise<SPFxTemplate>;
     static fromMemoryAsync(templateName: string, templateJsonData: unknown, fileMap: Map<string, Buffer>): Promise<SPFxTemplate>;
+    get minimumEngineVersion(): string | undefined;
     get name(): string;
     renderAsync(context: object, options?: IRenderOptions): Promise<TemplateFileSystem>;
     get spfxVersion(): string;
     toString(): string;
+    get unknownFields(): readonly string[];
     get version(): string;
 }
 
@@ -166,10 +172,12 @@ export class SPFxTemplateJsonFile {
     get description(): string | undefined;
     static fromFileAsync(filePath: string): Promise<SPFxTemplateJsonFile>;
     static fromFolderAsync(folderPath: string): Promise<SPFxTemplateJsonFile>;
+    get minimumEngineVersion(): string | undefined;
     get name(): string;
     get spfxVersion(): string;
     // (undocumented)
     static readonly TEMPLATE_JSON: string;
+    get unknownFields(): readonly string[];
     get version(): string;
 }
 
