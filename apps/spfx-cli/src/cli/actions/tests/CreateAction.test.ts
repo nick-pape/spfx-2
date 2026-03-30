@@ -422,6 +422,22 @@ describe('CreateAction', () => {
     });
   });
 
+  describe('--target-dir derivation', () => {
+    it('defaults to cwd/solutionName when --target-dir is omitted', async () => {
+      // renderAsync no longer takes targetDir — it's passed to writeAsync instead.
+      // The snapshot output includes "targetDir: ..." so we verify via snapshot.
+      await runCreateAsync();
+    });
+
+    it('uses cwd/solutionName when --solution-name is provided without --target-dir', async () => {
+      await runCreateAsync(['--solution-name', 'my-app']);
+    });
+
+    it('uses explicit --target-dir and ignores solution name derivation', async () => {
+      await runCreateAsync(['--target-dir', '/custom/dir']);
+    });
+  });
+
   describe('--package-manager', () => {
     beforeEach(() => {
       MockedExecutable.spawn.mockReturnValue({});
@@ -438,7 +454,7 @@ describe('CreateAction', () => {
       expect(MockedExecutable.spawn).toHaveBeenCalledWith(
         'npm',
         ['install'],
-        expect.objectContaining({ currentWorkingDirectory: '/tmp/test' })
+        expect.objectContaining({ currentWorkingDirectory: '/tmp/test/test' })
       );
     });
 
@@ -447,7 +463,7 @@ describe('CreateAction', () => {
       expect(MockedExecutable.spawn).toHaveBeenCalledWith(
         'pnpm',
         ['install'],
-        expect.objectContaining({ currentWorkingDirectory: '/tmp/test' })
+        expect.objectContaining({ currentWorkingDirectory: '/tmp/test/test' })
       );
     });
 
@@ -456,7 +472,7 @@ describe('CreateAction', () => {
       expect(MockedExecutable.spawn).toHaveBeenCalledWith(
         'yarn',
         ['install'],
-        expect.objectContaining({ currentWorkingDirectory: '/tmp/test' })
+        expect.objectContaining({ currentWorkingDirectory: '/tmp/test/test' })
       );
     });
 
@@ -465,7 +481,7 @@ describe('CreateAction', () => {
       expect(MockedExecutable.spawn).toHaveBeenCalledWith(
         'npm',
         ['install'],
-        expect.objectContaining({ stdio: 'inherit' })
+        expect.objectContaining({ currentWorkingDirectory: '/tmp/test/test', stdio: 'inherit' })
       );
     });
 
