@@ -6,7 +6,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -17,7 +17,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -28,7 +28,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /custom/dir[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
   "[    log] Running npm install in /custom/dir...[n]",
   "[    log] npm install completed successfully.[n]",
@@ -41,7 +41,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
   "[    log] Running npm install in /tmp/test/test...[n]",
   "[    log] npm install completed successfully.[n]",
@@ -54,7 +54,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
   "[    log] Running pnpm install in /tmp/test/test...[n]",
   "[    log] pnpm install completed successfully.[n]",
@@ -67,7 +67,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
   "[    log] Running yarn install in /tmp/test/test...[n]",
   "[    log] yarn install completed successfully.[n]",
@@ -80,7 +80,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
   "[    log] Running npm install in /tmp/test/test...[n]",
   "[    log] npm install completed successfully.[n]",
@@ -94,7 +94,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -105,7 +105,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -116,7 +116,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -128,7 +128,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -139,7 +139,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -150,7 +150,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/my-app[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -161,7 +161,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /custom/dir[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -173,7 +173,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -184,7 +184,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -195,7 +195,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -206,7 +206,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -217,7 +217,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -228,7 +228,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -239,7 +239,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -250,7 +250,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -261,7 +261,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -272,7 +272,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -283,7 +283,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -294,7 +294,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -305,7 +305,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -316,7 +316,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -327,7 +327,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -338,7 +338,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -349,7 +349,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -361,7 +361,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -373,7 +373,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -386,7 +386,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -398,7 +398,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -410,7 +410,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -421,7 +421,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -432,7 +432,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -443,7 +443,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -454,7 +454,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
@@ -465,7 +465,7 @@ Array [
   "[    log] [Mocked SPFxTemplateCollection][n]",
   "[    log] targetDir: /tmp/test/test[n]",
   "[    log] [n]",
-  "[    log] The following files will be modified:[n]",
+  "[    log] The following files will be generated:[n]",
   "[    log] [n]",
 ]
 `;
