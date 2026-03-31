@@ -232,7 +232,7 @@ export class SPFxTemplate {
         renderedFilename = renderedFilename.split(placeholder).join(value);
       }
       // Normalize to relative POSIX path: convert backslashes and strip leading slashes
-      renderedFilename = renderedFilename.replace(/\\/g, '/').replace(/^\/+/, '');
+      renderedFilename = Path.convertToSlashes(renderedFilename).replace(/^\/+/, '');
 
       if (typeof contents === 'string') {
         // Process text file contents as EJS template
