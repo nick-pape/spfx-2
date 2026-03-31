@@ -49,7 +49,7 @@ export class SPFxTemplateWriter {
    * @param targetDir - The absolute path to the destination directory
    */
   public async writeAsync(templateOutput: TemplateOutput, targetDir: string): Promise<void> {
-    const resolvedTargetDir: string = Path.convertToSlashes(targetDir);
+    const resolvedTargetDir: string = Path.convertToSlashes(path.resolve(targetDir));
 
     await Async.forEachAsync(
       templateOutput.files,

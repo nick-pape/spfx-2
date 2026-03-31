@@ -9,7 +9,6 @@ jest.mock('@rushstack/node-core-library', () => {
       readFileAsync: jest.fn(),
       readFileToBufferAsync: jest.fn(),
       writeFileAsync: jest.fn().mockResolvedValue(undefined),
-      ensureFolderAsync: jest.fn().mockResolvedValue(undefined),
       isNotExistError: (error: { code?: string }) => error?.code === 'ENOENT'
     }
   };
@@ -29,7 +28,6 @@ describe(SPFxTemplateWriter.name, () => {
     jest.clearAllMocks();
     templateFs = new TemplateOutput();
     mockFileSystem.writeFileAsync.mockResolvedValue(undefined);
-    mockFileSystem.ensureFolderAsync.mockResolvedValue(undefined);
   });
 
   it('should write new files to disk', async () => {
@@ -41,9 +39,9 @@ describe(SPFxTemplateWriter.name, () => {
 
     expect(mockFileSystem.writeFileAsync).toHaveBeenCalledWith(
       expect.stringContaining('newFile.ts'),
-      'new content'
+      'new content',
+      { ensureFolderExists: true }
     );
-    expect(mockFileSystem.ensureFolderAsync).toHaveBeenCalled();
   });
 
   it('should route modified package.json through merge helper', async () => {
@@ -148,7 +146,8 @@ describe(SPFxTemplateWriter.name, () => {
 
     expect(mockFileSystem.writeFileAsync).toHaveBeenCalledWith(
       expect.stringContaining('file.txt'),
-      'existing+incoming'
+      'existing+incoming',
+      { ensureFolderExists: true }
     );
   });
 
@@ -169,8 +168,9 @@ describe(SPFxTemplateWriter.name, () => {
     const writer = new SPFxTemplateWriter();
     await writer.writeAsync(templateFs, '/target');
 
-    expect(mockFileSystem.writeFileAsync).toHaveBeenCalledWith(expect.stringContaining('logo.png'), buffer);
-    expect(mockFileSystem.ensureFolderAsync).toHaveBeenCalled();
+    expect(mockFileSystem.writeFileAsync).toHaveBeenCalledWith(expect.stringContaining('logo.png'), buffer, {
+      ensureFolderExists: true
+    });
   });
 
   it('should overwrite binary files when content differs', async () => {
@@ -184,7 +184,8 @@ describe(SPFxTemplateWriter.name, () => {
 
     expect(mockFileSystem.writeFileAsync).toHaveBeenCalledWith(
       expect.stringContaining('logo.png'),
-      newBuffer
+      newBuffer,
+      { ensureFolderExists: true }
     );
   });
 
