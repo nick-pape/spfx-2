@@ -120,6 +120,9 @@ export interface IPublicGitHubRepositorySourceOptions {
   token?: string;
 }
 
+// Matches https://<host>/<owner>/<repo>[.git] — HTTPS only, host-agnostic for GHE support.
+const REPO_URL_REGEX: RegExp = /^https:\/\/([^/]+)\/([^/]+)\/([^/]+?)(\.git)?$/;
+
 /**
  * @public
  * A template source backed by a GitHub repository (github.com or GitHub Enterprise).
@@ -149,8 +152,6 @@ export interface IPublicGitHubRepositorySourceOptions {
  * This pattern is similar to other scaffolding tools (npm create, dotnet new, etc.)
  */
 export class PublicGitHubRepositorySource extends BaseSPFxTemplateRepositorySource {
-  private static readonly _REPO_URL_REGEX: RegExp = /^https:\/\/([^/]+)\/([^/]+)\/([^/]+?)(\.git)?$/;
-
   private readonly _repoUrl: string;
   private readonly _ref: string;
   private readonly _terminal: ITerminal;
@@ -191,12 +192,12 @@ export class PublicGitHubRepositorySource extends BaseSPFxTemplateRepositorySour
   private _parseRepoUrl(): { host: string; owner: string; repo: string } {
     // Parse URLs like: https://github.com/owner/repo, https://github.mycompany.com/org/repo,
     // or the same with a .git suffix. Only HTTPS is accepted.
-    const match: RegExpMatchArray | null = this._repoUrl.match(PublicGitHubRepositorySource._REPO_URL_REGEX);
+    const match: RegExpMatchArray | null = this._repoUrl.match(REPO_URL_REGEX);
     if (!match) {
       throw new Error(`Invalid GitHub repository URL: ${this._repoUrl}`);
     }
 
-    const [, host, owner, repo] = match as [string, string, string, string];
+    const [, host, owner, repo] = match as [string, string, string, string, string?];
     return { host: host.toLowerCase(), owner, repo };
   }
 

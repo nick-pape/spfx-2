@@ -34,6 +34,7 @@ export abstract class SPFxActionBase extends CommandLineAction {
   protected readonly _spfxVersionParameter: CommandLineStringParameter;
   protected readonly _localSourceParameter: CommandLineStringListParameter;
   protected readonly _remoteSourcesParameter: CommandLineStringListParameter;
+  private readonly _githubTokenParameter: CommandLineStringParameter;
 
   protected constructor(options: ICommandLineActionOptions, terminal: Terminal) {
     super(options);
@@ -66,6 +67,15 @@ export abstract class SPFxActionBase extends CommandLineAction {
       argumentName: 'URL',
       description: 'Public GitHub repository URL to use as an additional template source (repeatable)'
     });
+
+    this._githubTokenParameter = this.defineStringParameter({
+      parameterLongName: '--github-token',
+      argumentName: 'TOKEN',
+      description:
+        'GitHub personal access token for authenticating requests. ' +
+        'Required for GitHub Enterprise hosts and private repositories on github.com.',
+      environmentVariable: GITHUB_TOKEN_ENV_VAR_NAME
+    });
   }
 
   /**
@@ -96,7 +106,7 @@ export abstract class SPFxActionBase extends CommandLineAction {
     }
     const ref: string | undefined = spfxVersionBranch ?? urlBranch;
 
-    const token: string | undefined = process.env[GITHUB_TOKEN_ENV_VAR_NAME]?.trim() || undefined;
+    const token: string | undefined = this._githubTokenParameter.value?.trim() || undefined;
 
     terminal.writeLine(`Using GitHub template source: ${repoUrl}${ref ? ` (branch: ${ref})` : ''}`);
     manager.addSource(new PublicGitHubRepositorySource({ repoUrl, branch: ref, terminal, token }));
@@ -119,7 +129,7 @@ export abstract class SPFxActionBase extends CommandLineAction {
    */
   protected _addRemoteSources(manager: SPFxTemplateRepositoryManager): void {
     const terminal: Terminal = this._terminal;
-    const token: string | undefined = process.env[GITHUB_TOKEN_ENV_VAR_NAME]?.trim() || undefined;
+    const token: string | undefined = this._githubTokenParameter.value?.trim() || undefined;
     for (const remoteUrl of this._remoteSourcesParameter.values) {
       const { repoUrl, urlBranch } = parseGitHubUrlAndRef(remoteUrl);
       terminal.writeLine(
