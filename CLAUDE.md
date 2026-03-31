@@ -201,7 +201,7 @@ This is the single most important coding convention in this repo. **Never** use 
 | `fs.readFile(p)` / `fs.readFileSync(p)` | `FileSystem.readFileAsync(p)` |
 | `fs.readFile(p)` (binary) | `FileSystem.readFileToBufferAsync(p)` |
 | `fs.readdir(p)` / `fs.readdirSync(p)` | `FileSystem.readFolderItemsAsync(p)` |
-| `fs.writeFile(p, data)` / `fs.writeFileSync(p, data)` | `FileSystem.writeFileAsync(p, { content, ensureFolderExists: true })` |
+| `fs.writeFile(p, data)` / `fs.writeFileSync(p, data)` | `FileSystem.writeFileAsync(p, content, { ensureFolderExists: true })` |
 | `(error as any)?.code !== 'ENOENT'` | `FileSystem.isNotExistError(error)` |
 | `JSON.parse(text)` | `JsonFile.parseString(text)` (preserves comments via `jju`) |
 | `JSON.stringify(obj)` | `JsonFile.updateString(original, obj)` (preserves comments and formatting) |
