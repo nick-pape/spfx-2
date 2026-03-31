@@ -17,6 +17,7 @@ import {
 
 import {
   DEFAULT_GITHUB_REPO,
+  GITHUB_TOKEN_ENV_VAR_NAME,
   SPFX_TEMPLATE_REPO_URL_ENV_VAR_NAME,
   parseGitHubUrlAndRef
 } from '../../utilities/github';
@@ -95,8 +96,10 @@ export abstract class SPFxActionBase extends CommandLineAction {
     }
     const ref: string | undefined = spfxVersionBranch ?? urlBranch;
 
+    const token: string | undefined = process.env[GITHUB_TOKEN_ENV_VAR_NAME]?.trim() || undefined;
+
     terminal.writeLine(`Using GitHub template source: ${repoUrl}${ref ? ` (branch: ${ref})` : ''}`);
-    manager.addSource(new PublicGitHubRepositorySource({ repoUrl, branch: ref, terminal }));
+    manager.addSource(new PublicGitHubRepositorySource({ repoUrl, branch: ref, terminal, token }));
   }
 
   /**
@@ -116,12 +119,13 @@ export abstract class SPFxActionBase extends CommandLineAction {
    */
   protected _addRemoteSources(manager: SPFxTemplateRepositoryManager): void {
     const terminal: Terminal = this._terminal;
+    const token: string | undefined = process.env[GITHUB_TOKEN_ENV_VAR_NAME]?.trim() || undefined;
     for (const remoteUrl of this._remoteSourcesParameter.values) {
       const { repoUrl, urlBranch } = parseGitHubUrlAndRef(remoteUrl);
       terminal.writeLine(
         `Adding remote template source: ${repoUrl}${urlBranch ? ` (branch: ${urlBranch})` : ''}`
       );
-      manager.addSource(new PublicGitHubRepositorySource({ repoUrl, branch: urlBranch, terminal }));
+      manager.addSource(new PublicGitHubRepositorySource({ repoUrl, branch: urlBranch, terminal, token }));
     }
   }
 
