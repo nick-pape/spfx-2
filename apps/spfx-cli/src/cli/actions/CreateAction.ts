@@ -21,7 +21,7 @@ import {
   SPFxTemplateRepositoryManager,
   type SPFxTemplate,
   SPFxTemplateWriter,
-  type TemplateFileSystem
+  type TemplateOutput
 } from '@microsoft/spfx-template-api';
 
 import { SOLUTION_NAME_PATTERN } from '../../utilities/validation';
@@ -197,7 +197,7 @@ export class CreateAction extends SPFxActionBase {
       const componentDescription: string =
         this._componentDescriptionParameter.value || `${componentName} description`;
 
-      const templateFs: TemplateFileSystem = await template.renderAsync(
+      const templateFs: TemplateOutput = await template.renderAsync(
         {
           solution_name: solutionName,
           libraryName: this._libraryNameParameter.value,
@@ -264,7 +264,7 @@ async function _runInstallAsync(
 /**
  * Utility function to show the user which files in the in-memory file system are pending changes.
  */
-function _printFileChanges(terminal: Terminal, templateFs: TemplateFileSystem, targetDir: string): void {
+function _printFileChanges(terminal: Terminal, templateFs: TemplateOutput, targetDir: string): void {
   terminal.writeLine(`targetDir: ${targetDir}`);
 
   terminal.writeLine();

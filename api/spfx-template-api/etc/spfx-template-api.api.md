@@ -75,7 +75,7 @@ export interface ISPFxTemplateJson {
 }
 
 // @public
-export interface ITemplateFileEntry {
+export interface ITemplateOutputEntry {
     readonly contents: string | Buffer;
 }
 
@@ -142,7 +142,7 @@ export class SPFxTemplate {
     static fromMemoryAsync(templateName: string, templateJsonData: unknown, fileMap: Map<string, Buffer>): Promise<SPFxTemplate>;
     get minimumEngineVersion(): string | undefined;
     get name(): string;
-    renderAsync(context: object, options?: IRenderOptions): Promise<TemplateFileSystem>;
+    renderAsync(context: object, options?: IRenderOptions): Promise<TemplateOutput>;
     get spfxVersion(): string;
     toString(): string;
     get unknownFields(): readonly string[];
@@ -195,12 +195,12 @@ export type SPFxTemplateRepositorySourceKind = 'local' | 'github';
 export class SPFxTemplateWriter {
     constructor();
     addMergeHelper(helper: IMergeHelper): void;
-    writeAsync(templateFs: TemplateFileSystem, targetDir: string): Promise<void>;
+    writeAsync(templateOutput: TemplateOutput, targetDir: string): Promise<void>;
 }
 
 // @public
-export class TemplateFileSystem {
-    get files(): ReadonlyMap<string, ITemplateFileEntry>;
+export class TemplateOutput {
+    get files(): ReadonlyMap<string, ITemplateOutputEntry>;
     read(relativePath: string): string | Buffer | undefined;
     write(relativePath: string, contents: string | Buffer): void;
 }

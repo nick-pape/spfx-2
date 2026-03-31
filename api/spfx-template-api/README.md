@@ -107,7 +107,7 @@ const templates = await manager.getTemplatesAsync();
 
 ## Writing to disk
 
-`SPFxTemplateWriter` writes the in-memory `TemplateFileSystem` to the target directory. When scaffolding into an existing SPFx solution, it intelligently merges known config files (package.json, serve.json, etc.) via registered merge helpers. Unregistered text files that already exist on disk are preserved; binary files and new files are written directly.
+`SPFxTemplateWriter` writes the in-memory `TemplateOutput` to the target directory. When scaffolding into an existing SPFx solution, it intelligently merges known config files (package.json, serve.json, etc.) via registered merge helpers. Unregistered text files that already exist on disk are preserved; binary files and new files are written directly.
 
 ```typescript
 const writer = new SPFxTemplateWriter();
@@ -137,13 +137,13 @@ The writer uses these helpers internally. You can also import them directly for 
 | `SPFxTemplateRepositoryManager` | Aggregates sources and returns a `SPFxTemplateCollection` |
 | `SPFxTemplateCollection` | `Map<string, SPFxTemplate>` of all loaded templates |
 | `SPFxTemplate` | Single template — exposes `name`, `category`, `spfxVersion`, and `renderAsync()` |
-| `ITemplateFileEntry` | A single file entry (text or binary contents) |
-| `TemplateFileSystem` | In-memory file system implementation backed by a `Map`, returned by `renderAsync()` |
+| `ITemplateOutputEntry` | A single file entry (text or binary contents) |
+| `TemplateOutput` | In-memory file system implementation backed by a `Map`, returned by `renderAsync()` |
 | `PublicGitHubRepositorySource` | Loads templates from a public GitHub repo |
 | `LocalFileSystemRepositorySource` | Loads templates from the local filesystem |
 | `BaseSPFxTemplateRepositorySource` | Base class for building custom template sources |
 | `SPFxRepositorySource` | Interface implemented by all source types |
-| `SPFxTemplateWriter` | Writes a `TemplateFileSystem` to disk with merge support |
+| `SPFxTemplateWriter` | Writes a `TemplateOutput` to disk with merge support |
 | `IMergeHelper` | Interface for implementing custom merge helpers |
 | `ServeJsonMergeHelper` | Merges `config/serve.json` (also available standalone) |
 | `SPFxTemplateCategory` | Union type of template categories: `'webpart' | 'extension' | 'ace' | 'library'` |

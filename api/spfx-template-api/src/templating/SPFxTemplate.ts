@@ -14,7 +14,7 @@ import {
 } from './SPFxTemplateJsonFile';
 import { createCasedString, type ICasedString } from './CasedString';
 import { isBinaryFile } from './binaryFiles';
-import { TemplateFileSystem } from '../writing/TemplateFileSystem';
+import { TemplateOutput } from '../writing/TemplateOutput';
 
 /**
  * @public
@@ -196,9 +196,9 @@ export class SPFxTemplate {
    * Renders the template with the provided context object.
    * @param context - The context object containing variables to be used in template rendering
    * @param options - Optional render options
-   * @returns A Promise that resolves to a TemplateFileSystem containing the rendered files
+   * @returns A Promise that resolves to a TemplateOutput containing the rendered files
    */
-  public async renderAsync(context: object, options?: IRenderOptions): Promise<TemplateFileSystem> {
+  public async renderAsync(context: object, options?: IRenderOptions): Promise<TemplateOutput> {
     // Validate the context object against the template's contextSchema (if declared).
     // Validation runs on the raw (pre-wrap) context so schema types remain simple strings.
     if (this._definition.contextSchema) {
@@ -222,7 +222,7 @@ export class SPFxTemplate {
     // placeholder replacement (e.g. {componentName.pascal} -> "HelloWorld").
     const { ejsContext, flatEntries } = _buildRenderContext(context);
 
-    const templateFs: TemplateFileSystem = new TemplateFileSystem();
+    const templateFs: TemplateOutput = new TemplateOutput();
 
     for (const [filename, contents] of this._files) {
       // Render the filename by replacing {key} and {key.property} placeholders

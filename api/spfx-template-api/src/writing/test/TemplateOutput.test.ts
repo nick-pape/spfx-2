@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-import { TemplateFileSystem } from '../TemplateFileSystem';
+import { TemplateOutput } from '../TemplateOutput';
 
-describe(TemplateFileSystem.name, () => {
-  let fs: TemplateFileSystem;
+describe(TemplateOutput.name, () => {
+  let fs: TemplateOutput;
 
   beforeEach(() => {
-    fs = new TemplateFileSystem();
+    fs = new TemplateOutput();
   });
 
   describe('write and read', () => {

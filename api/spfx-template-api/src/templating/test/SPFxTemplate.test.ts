@@ -16,7 +16,7 @@ jest.mock('@rushstack/node-core-library', () => {
   };
 });
 
-import type { TemplateFileSystem } from '../../writing/TemplateFileSystem';
+import type { TemplateOutput } from '../../writing/TemplateOutput';
 
 import { Async, FileSystem, type FolderItem } from '@rushstack/node-core-library';
 
@@ -361,7 +361,7 @@ describe(SPFxTemplate.name, () => {
       const template = new SPFxTemplate(definition, files);
       const context = { name: 'MyApp', title: 'My Application' };
 
-      const result: TemplateFileSystem = await template.renderAsync(context);
+      const result: TemplateOutput = await template.renderAsync(context);
 
       expect(result.read('src/index.ts')).toBe('const name = "MyApp";');
       expect(result.read('README.md')).toBe('# My Application');
@@ -388,7 +388,7 @@ describe(SPFxTemplate.name, () => {
       const template = new SPFxTemplate(definition, files);
       const context = { componentName: 'MyComponent' };
 
-      const result: TemplateFileSystem = await template.renderAsync(context);
+      const result: TemplateOutput = await template.renderAsync(context);
 
       expect(result.read('src/index.ts')).toBe('const name = "MyComponent";');
     });
@@ -430,7 +430,7 @@ describe(SPFxTemplate.name, () => {
       const template = new SPFxTemplate(definition, files);
       const context = { componentName: 'MyComponent' };
 
-      const result: TemplateFileSystem = await template.renderAsync(context);
+      const result: TemplateOutput = await template.renderAsync(context);
 
       expect(result.read('src/MyComponent.ts')).toBe('export class MyComponent {}');
     });
@@ -451,7 +451,7 @@ describe(SPFxTemplate.name, () => {
       const template = new SPFxTemplate(definition, files);
       const context = { name: 'World', version: '1.0.0' };
 
-      const result: TemplateFileSystem = await template.renderAsync(context);
+      const result: TemplateOutput = await template.renderAsync(context);
 
       expect(result.read('file.txt')).toBe('Hello World!');
       expect(result.read('config.json')).toBe('{"version": "1.0.0"}');
@@ -473,7 +473,7 @@ describe(SPFxTemplate.name, () => {
       const template = new SPFxTemplate(definition, files);
       const context = { componentName: 'Hello World' };
 
-      const result: TemplateFileSystem = await template.renderAsync(context);
+      const result: TemplateOutput = await template.renderAsync(context);
 
       expect(result.read('src/index.ts')).toBe('export class HelloWorld {}');
       expect(result.read('style.css')).toBe('.hello-world-container { }');
@@ -497,7 +497,7 @@ describe(SPFxTemplate.name, () => {
       const template = new SPFxTemplate(definition, files);
       const context = { componentName: 'Hello World' };
 
-      const result: TemplateFileSystem = await template.renderAsync(context);
+      const result: TemplateOutput = await template.renderAsync(context);
 
       expect(result.read('src/helloWorldWebPart/HelloWorldWebPart.ts')).toBe(
         'export class HelloWorldWebPart {}'
@@ -519,7 +519,7 @@ describe(SPFxTemplate.name, () => {
       const template = new SPFxTemplate(definition, files);
       const context = { componentName: 'Hello World' };
 
-      const result: TemplateFileSystem = await template.renderAsync(context);
+      const result: TemplateOutput = await template.renderAsync(context);
 
       expect(result.read('manifest.json')).toBe('{"title": "Hello World"}');
     });
@@ -539,12 +539,12 @@ describe(SPFxTemplate.name, () => {
       const template = new SPFxTemplate(definition, files);
       const context = { libraryName: 'my-library', componentAlias: 'HelloWorld' };
 
-      const result: TemplateFileSystem = await template.renderAsync(context);
+      const result: TemplateOutput = await template.renderAsync(context);
 
       expect(result.read('file.txt')).toBe('MyLibrary / hello-world');
     });
 
-    it('should return TemplateFileSystem instance', async () => {
+    it('should return TemplateOutput instance', async () => {
       const definition = new SPFxTemplateJsonFile({
         name: 'Test',
         category: 'webpart',
@@ -553,7 +553,7 @@ describe(SPFxTemplate.name, () => {
       });
 
       const template = new SPFxTemplate(definition, new Map());
-      const result: TemplateFileSystem = await template.renderAsync({});
+      const result: TemplateOutput = await template.renderAsync({});
 
       expect(result).toBeDefined();
       expect(typeof result.read).toBe('function');

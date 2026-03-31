@@ -8,4 +8,4 @@ export { ConfigJsonMergeHelper } from './ConfigJsonMergeHelper';
 export { PackageSolutionJsonMergeHelper } from './PackageSolutionJsonMergeHelper';
 export { ServeJsonMergeHelper } from './ServeJsonMergeHelper';
 export { SPFxTemplateWriter } from './SPFxTemplateWriter';
-export { type ITemplateFileEntry, TemplateFileSystem } from './TemplateFileSystem';
+export { type ITemplateOutputEntry, TemplateOutput } from './TemplateOutput';

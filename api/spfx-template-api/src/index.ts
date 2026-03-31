@@ -38,6 +38,6 @@ export {
   PackageSolutionJsonMergeHelper,
   ServeJsonMergeHelper,
   SPFxTemplateWriter,
-  type ITemplateFileEntry,
-  TemplateFileSystem
+  type ITemplateOutputEntry,
+  TemplateOutput
 } from './writing/index';

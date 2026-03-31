@@ -7,7 +7,7 @@ import * as path from 'node:path';
 
 import { FileSystem } from '@rushstack/node-core-library';
 
-import { TemplateFileSystem } from '../TemplateFileSystem';
+import { TemplateOutput } from '../TemplateOutput';
 import { SPFxTemplateWriter } from '../SPFxTemplateWriter';
 
 /**
@@ -19,11 +19,11 @@ import { SPFxTemplateWriter } from '../SPFxTemplateWriter';
  */
 describe(`${SPFxTemplateWriter.name} integration`, () => {
   let tempDir: string;
-  let templateFs: TemplateFileSystem;
+  let templateFs: TemplateOutput;
 
   beforeEach(() => {
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'spfx-writer-'));
-    templateFs = new TemplateFileSystem();
+    templateFs = new TemplateOutput();
   });
 
   afterEach(() => {

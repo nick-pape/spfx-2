@@ -2,24 +2,24 @@
 // See LICENSE in the project root for license information.
 
 /**
- * Represents a single file entry in the in-memory template file system.
+ * Represents a single file entry in the template output.
  * @public
  */
-export interface ITemplateFileEntry {
+export interface ITemplateOutputEntry {
   /** The file contents as a string (text) or Buffer (binary). */
   readonly contents: string | Buffer;
 }
 
 /**
- * An in-memory file system that holds rendered template output.
+ * Holds the rendered output of an SPFx template as an in-memory collection of files.
  * Created by {@link SPFxTemplate.renderAsync} and consumed by {@link SPFxTemplateWriter.writeAsync}.
  * @public
  */
-export class TemplateFileSystem {
-  private readonly _files: Map<string, ITemplateFileEntry> = new Map<string, ITemplateFileEntry>();
+export class TemplateOutput {
+  private readonly _files: Map<string, ITemplateOutputEntry> = new Map<string, ITemplateOutputEntry>();
 
   /**
-   * Writes a file to the in-memory file system.
+   * Adds a file to the template output.
    * @param relativePath - Path relative to the destination directory
    * @param contents - File contents (string for text, Buffer for binary)
    */
@@ -28,7 +28,7 @@ export class TemplateFileSystem {
   }
 
   /**
-   * Reads a file from the in-memory file system.
+   * Reads a file from the template output.
    * @param relativePath - Path relative to the destination directory
    * @returns The file contents, or undefined if the file does not exist
    */
@@ -37,10 +37,10 @@ export class TemplateFileSystem {
   }
 
   /**
-   * Returns a read-only view of all files in the file system.
+   * Returns a read-only view of all files in the output.
    * Keys are paths relative to the destination directory.
    */
-  public get files(): ReadonlyMap<string, ITemplateFileEntry> {
+  public get files(): ReadonlyMap<string, ITemplateOutputEntry> {
     return this._files;
   }
 }

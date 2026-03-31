@@ -17,17 +17,17 @@ jest.mock('@rushstack/node-core-library', () => {
 
 import { FileSystem } from '@rushstack/node-core-library';
 
-import { TemplateFileSystem } from '../TemplateFileSystem';
+import { TemplateOutput } from '../TemplateOutput';
 import { SPFxTemplateWriter } from '../SPFxTemplateWriter';
 
 const mockFileSystem = FileSystem as jest.Mocked<typeof FileSystem>;
 
 describe(SPFxTemplateWriter.name, () => {
-  let templateFs: TemplateFileSystem;
+  let templateFs: TemplateOutput;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    templateFs = new TemplateFileSystem();
+    templateFs = new TemplateOutput();
     mockFileSystem.writeFileAsync.mockResolvedValue(undefined);
     mockFileSystem.ensureFolderAsync.mockResolvedValue(undefined);
   });

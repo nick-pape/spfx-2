@@ -3,9 +3,9 @@
 
 import * as path from 'node:path';
 
-import { FileSystem } from '@rushstack/node-core-library';
+import { Async, FileSystem, Path } from '@rushstack/node-core-library';
 
-import type { TemplateFileSystem } from './TemplateFileSystem';
+import type { TemplateOutput } from './TemplateOutput';
 import type { IMergeHelper } from './IMergeHelper';
 import { PackageJsonMergeHelper } from './PackageJsonMergeHelper';
 import { ConfigJsonMergeHelper } from './ConfigJsonMergeHelper';
@@ -45,72 +45,76 @@ export class SPFxTemplateWriter {
    * routed through their corresponding merge helper (if one is registered).
    * New files are written directly.
    *
-   * @param templateFs - The in-memory file system containing rendered template files
+   * @param templateOutput - The rendered template output containing files to write
    * @param targetDir - The absolute path to the destination directory
    */
-  public async writeAsync(templateFs: TemplateFileSystem, targetDir: string): Promise<void> {
-    const resolvedTargetDir: string = path.resolve(targetDir);
+  public async writeAsync(templateOutput: TemplateOutput, targetDir: string): Promise<void> {
+    const resolvedTargetDir: string = Path.convertToSlashes(path.resolve(targetDir));
 
-    for (const [rawRelativePath, entry] of templateFs.files) {
-      // Normalize: strip leading separators and convert backslashes to forward slashes
-      const relativePath: string = rawRelativePath.replace(/\\/g, '/').replace(/^\/+/, '');
+    await Async.forEachAsync(
+      templateOutput.files.entries(),
+      async ([rawRelativePath, entry]) => {
+        const relativePath: string = Path.convertToSlashes(rawRelativePath).replace(/^\/+/, '');
 
-      // Guard against path traversal: resolve the full path and verify it stays under targetDir
-      const absolutePath: string = path.resolve(resolvedTargetDir, relativePath);
-      const relativeToTarget: string = path.relative(resolvedTargetDir, absolutePath);
-      if (
-        path.isAbsolute(relativeToTarget) ||
-        relativeToTarget === '..' ||
-        relativeToTarget.startsWith('..' + path.sep)
-      ) {
-        throw new Error(`Template path "${rawRelativePath}" escapes the target directory`);
-      }
-
-      const contents: string | Buffer = entry.contents;
-
-      if (typeof contents !== 'string') {
-        // Binary file — skip if identical file already exists on disk
-        try {
-          const existingBuffer: Buffer = await FileSystem.readFileToBufferAsync(absolutePath);
-          if (existingBuffer.equals(contents)) {
-            continue;
-          }
-        } catch (error: unknown) {
-          if (!FileSystem.isNotExistError(error as Error)) {
-            throw error;
-          }
+        // Guard against path traversal
+        const absolutePath: string = Path.convertToSlashes(path.resolve(targetDir, relativePath));
+        if (!absolutePath.startsWith(resolvedTargetDir + '/')) {
+          throw new Error(`Template path "${rawRelativePath}" escapes the target directory`);
         }
-        await FileSystem.ensureFolderAsync(path.dirname(absolutePath));
-        await FileSystem.writeFileAsync(absolutePath, contents);
-        continue;
-      }
 
-      // Text file — attempt merge with existing content on disk
-      let existingContent: string;
+        await this._writeFileAsync(relativePath, absolutePath, entry.contents);
+      },
+      { concurrency: 50 }
+    );
+  }
+
+  private async _writeFileAsync(
+    relativePath: string,
+    absolutePath: string,
+    contents: string | Buffer
+  ): Promise<void> {
+    if (typeof contents !== 'string') {
+      // Binary file — skip if identical file already exists on disk
       try {
-        existingContent = await FileSystem.readFileAsync(absolutePath);
+        const existingBuffer: Buffer = await FileSystem.readFileToBufferAsync(absolutePath);
+        if (existingBuffer.equals(contents)) {
+          return;
+        }
       } catch (error: unknown) {
         if (!FileSystem.isNotExistError(error as Error)) {
           throw error;
         }
-        // File does not exist on disk — write as new file
-        await FileSystem.ensureFolderAsync(path.dirname(absolutePath));
-        await FileSystem.writeFileAsync(absolutePath, contents);
-        continue;
       }
-
-      // File exists on disk — check if content differs
-      if (existingContent === contents) {
-        continue;
-      }
-
-      const helper: IMergeHelper | undefined = this._mergeHelpers.get(relativePath);
-      if (helper) {
-        const mergedContent: string = helper.merge(existingContent, contents);
-        await FileSystem.ensureFolderAsync(path.dirname(absolutePath));
-        await FileSystem.writeFileAsync(absolutePath, mergedContent);
-      }
-      // No merge helper and content differs — preserve existing content (skip writing)
+      await FileSystem.ensureFolderAsync(path.dirname(absolutePath));
+      await FileSystem.writeFileAsync(absolutePath, contents);
+      return;
     }
+
+    // Text file — attempt merge with existing content on disk
+    let existingContent: string;
+    try {
+      existingContent = await FileSystem.readFileAsync(absolutePath);
+    } catch (error: unknown) {
+      if (!FileSystem.isNotExistError(error as Error)) {
+        throw error;
+      }
+      // File does not exist on disk — write as new file
+      await FileSystem.ensureFolderAsync(path.dirname(absolutePath));
+      await FileSystem.writeFileAsync(absolutePath, contents);
+      return;
+    }
+
+    // File exists on disk — check if content differs
+    if (existingContent === contents) {
+      return;
+    }
+
+    const helper: IMergeHelper | undefined = this._mergeHelpers.get(relativePath);
+    if (helper) {
+      const mergedContent: string = helper.merge(existingContent, contents);
+      await FileSystem.ensureFolderAsync(path.dirname(absolutePath));
+      await FileSystem.writeFileAsync(absolutePath, mergedContent);
+    }
+    // No merge helper and content differs — preserve existing content (skip writing)
   }
 }
