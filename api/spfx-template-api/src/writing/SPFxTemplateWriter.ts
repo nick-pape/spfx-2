@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-import * as path from 'node:path';
+import path from 'node:path';
 
 import { Async, FileSystem, Path } from '@rushstack/node-core-library';
 
@@ -49,10 +49,10 @@ export class SPFxTemplateWriter {
    * @param targetDir - The absolute path to the destination directory
    */
   public async writeAsync(templateOutput: TemplateOutput, targetDir: string): Promise<void> {
-    const resolvedTargetDir: string = Path.convertToSlashes(path.resolve(targetDir));
+    const resolvedTargetDir: string = Path.convertToSlashes(targetDir);
 
     await Async.forEachAsync(
-      templateOutput.files.entries(),
+      templateOutput.files,
       async ([rawRelativePath, entry]) => {
         const relativePath: string = Path.convertToSlashes(rawRelativePath).replace(/^\/+/, '');
 
@@ -73,48 +73,46 @@ export class SPFxTemplateWriter {
     absolutePath: string,
     contents: string | Buffer
   ): Promise<void> {
+    let contentToWrite: string | Buffer | undefined;
     if (typeof contents !== 'string') {
       // Binary file — skip if identical file already exists on disk
+      let existingBuffer: Buffer | undefined;
       try {
-        const existingBuffer: Buffer = await FileSystem.readFileToBufferAsync(absolutePath);
-        if (existingBuffer.equals(contents)) {
-          return;
-        }
-      } catch (error: unknown) {
-        if (!FileSystem.isNotExistError(error as Error)) {
+        existingBuffer = await FileSystem.readFileToBufferAsync(absolutePath);
+      } catch (error) {
+        if (!FileSystem.isNotExistError(error)) {
           throw error;
         }
       }
-      await FileSystem.ensureFolderAsync(path.dirname(absolutePath));
-      await FileSystem.writeFileAsync(absolutePath, contents);
-      return;
-    }
 
-    // Text file — attempt merge with existing content on disk
-    let existingContent: string;
-    try {
-      existingContent = await FileSystem.readFileAsync(absolutePath);
-    } catch (error: unknown) {
-      if (!FileSystem.isNotExistError(error as Error)) {
-        throw error;
+      if (!existingBuffer?.equals(contents)) {
+        contentToWrite = contents;
       }
-      // File does not exist on disk — write as new file
-      await FileSystem.ensureFolderAsync(path.dirname(absolutePath));
-      await FileSystem.writeFileAsync(absolutePath, contents);
-      return;
+    } else {
+      // Text file — attempt merge with existing content on disk
+      let existingContent: string | undefined;
+      try {
+        existingContent = await FileSystem.readFileAsync(absolutePath);
+      } catch (error) {
+        if (!FileSystem.isNotExistError(error)) {
+          throw error;
+        }
+      }
+
+      if (existingContent === undefined) {
+        contentToWrite = contents;
+      } else if (existingContent !== contents) {
+        const helper: IMergeHelper | undefined = this._mergeHelpers.get(relativePath);
+        if (helper) {
+          contentToWrite = helper.merge(existingContent, contents);
+        }
+
+        // Else, no merge helper and content differs — preserve existing content (skip writing)
+      }
     }
 
-    // File exists on disk — check if content differs
-    if (existingContent === contents) {
-      return;
+    if (contentToWrite !== undefined) {
+      await FileSystem.writeFileAsync(absolutePath, contentToWrite, { ensureFolderExists: true });
     }
-
-    const helper: IMergeHelper | undefined = this._mergeHelpers.get(relativePath);
-    if (helper) {
-      const mergedContent: string = helper.merge(existingContent, contents);
-      await FileSystem.ensureFolderAsync(path.dirname(absolutePath));
-      await FileSystem.writeFileAsync(absolutePath, mergedContent);
-    }
-    // No merge helper and content differs — preserve existing content (skip writing)
   }
 }
