@@ -253,7 +253,7 @@ const filePath = `${tempDir}/config/package-solution.json`;
 ### TypeScript Patterns
 
 - **Prefer `interface` + factory function over `class`** when there is no behavior (no methods that use `this`). For example, `CasedString` should be an `ICasedString` interface with a `createCasedString()` factory.
-- **Avoid `instanceof`** — it is expensive. If you already know the type from construction, track it through the data flow instead.
+- **Avoid ad-hoc `instanceof` checks for domain types** — they are expensive. Prefer discriminated unions or explicit `kind` fields, and track types through the data flow when you control construction. `instanceof Error` for error narrowing is fine.
 - **Use `Map` over object records** for dynamic key/value data. Maps are more performant.
 - **Use `IRequiredCommandLineChoiceParameter<T>`** for required choice parameters to avoid runtime casts.
 - **Prefer `T | undefined` with `?.`** over definite assignment assertions (`!:`). Use optional chaining:
