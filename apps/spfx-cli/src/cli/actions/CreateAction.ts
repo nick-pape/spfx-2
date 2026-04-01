@@ -24,7 +24,8 @@ import {
   type TemplateOutput,
   buildBuiltInContext,
   type ISPFxBuiltInContext,
-  type ISPFxTemplateParameterDefinition
+  type ISPFxTemplateParameterDefinition,
+  toKebabCase
 } from '@microsoft/spfx-template-api';
 
 import { SOLUTION_NAME_PATTERN } from '../../utilities/validation';
@@ -148,7 +149,7 @@ export class CreateAction extends SPFxActionBase {
       }
       // Compute a preliminary kebab-case solution name for targetDir before the
       // template is loaded. buildBuiltInContext will produce the same value.
-      const solutionName: string = rawSolutionName || _toKebabCase(componentName);
+      const solutionName: string = rawSolutionName || toKebabCase(componentName);
 
       const rawTargetDir: string | undefined = this._targetDirParameter.value?.trim();
       const targetDir: string =
@@ -214,7 +215,7 @@ export class CreateAction extends SPFxActionBase {
       );
 
       // Parse custom --param values and validate against template parameter definitions
-      const customParams: Record<string, string> = {};
+      const customParams: Map<string, string> = new Map<string, string>();
       for (const paramValue of this._paramsParameter.values) {
         const eqIndex: number = paramValue.indexOf('=');
         if (eqIndex <= 0) {
@@ -222,7 +223,7 @@ export class CreateAction extends SPFxActionBase {
             `Invalid ${this._paramsParameter.longName} format: "${paramValue}". Expected key=value format.`
           );
         }
-        customParams[paramValue.substring(0, eqIndex)] = paramValue.substring(eqIndex + 1);
+        customParams.set(paramValue.substring(0, eqIndex), paramValue.substring(eqIndex + 1));
       }
 
       const templateParams: Record<string, ISPFxTemplateParameterDefinition> | undefined =
@@ -231,10 +232,10 @@ export class CreateAction extends SPFxActionBase {
         const missing: string[] = [];
         for (const [key, paramDef] of Object.entries(templateParams)) {
           const isRequired: boolean = paramDef.required !== false;
-          if (isRequired && customParams[key] === undefined) {
+          if (isRequired && !customParams.has(key)) {
             missing.push(key);
-          } else if (customParams[key] === undefined && paramDef.default !== undefined) {
-            customParams[key] = paramDef.default;
+          } else if (!customParams.has(key) && paramDef.default !== undefined) {
+            customParams.set(key, paramDef.default);
           }
         }
         if (missing.length > 0) {
@@ -245,7 +246,10 @@ export class CreateAction extends SPFxActionBase {
         }
       }
 
-      const renderContext: Record<string, string> = { ...builtInContext, ...customParams };
+      const renderContext: Record<string, string> = {
+        ...builtInContext,
+        ...Object.fromEntries(customParams)
+      };
 
       const templateFs: TemplateOutput = await template.renderAsync(renderContext, {
         retainPhaseScripts: ciMode
@@ -322,20 +326,6 @@ async function _runInstallAsync(
   }
 
   terminal.writeLine(`${packageManager} install completed successfully.`);
-}
-
-/**
- * Simple kebab-case conversion used only for the default targetDir before the
- * template is loaded.  Duplicated intentionally to avoid importing from the API
- * package (the canonical implementation lives in SPFxBuiltInContext).
- */
-function _toKebabCase(input: string): string {
-  return input
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .split(/[^a-zA-Z0-9]+/)
-    .filter((w) => w.length > 0)
-    .map((w) => w.toLowerCase())
-    .join('-');
 }
 
 /**

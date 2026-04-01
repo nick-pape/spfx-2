@@ -17,6 +17,7 @@ export {
   type ISPFxBuiltInContext,
   type IBuildBuiltInContextOptions,
   BUILT_IN_PARAMETER_NAMES,
-  buildBuiltInContext
+  buildBuiltInContext,
+  toKebabCase
 } from './SPFxBuiltInContext';
 export { ENGINE_VERSION } from '../engineVersion';

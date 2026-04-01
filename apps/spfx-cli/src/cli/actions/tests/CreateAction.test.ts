@@ -5,9 +5,10 @@ jest.mock('@microsoft/spfx-template-api', () => {
   const actual = jest.requireActual('@microsoft/spfx-template-api');
   return {
     ...jest.createMockFromModule<typeof actual>('@microsoft/spfx-template-api'),
-    // buildBuiltInContext must use the real implementation so the render context
-    // is populated correctly in tests.
+    // buildBuiltInContext and toKebabCase must use the real implementation so the
+    // render context and solution name are populated correctly in tests.
     buildBuiltInContext: actual.buildBuiltInContext,
+    toKebabCase: actual.toKebabCase,
     SPFxScaffoldLog: actual.SPFxScaffoldLog
   };
 });

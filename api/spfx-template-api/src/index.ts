@@ -24,6 +24,7 @@ export {
   type IBuildBuiltInContextOptions,
   BUILT_IN_PARAMETER_NAMES,
   buildBuiltInContext,
+  toKebabCase,
   ENGINE_VERSION
 } from './templating/index';
 export {

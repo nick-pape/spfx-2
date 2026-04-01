@@ -336,4 +336,7 @@ export class TemplateOutput {
     write(relativePath: string, contents: string | Buffer): void;
 }
 
+// @public
+export function toKebabCase(input: string): string;
+
 ```

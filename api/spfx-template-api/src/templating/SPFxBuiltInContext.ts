@@ -95,7 +95,7 @@ export function buildBuiltInContext(
   const ciMode: boolean = options?.ciMode === true;
 
   const componentAlias: string = inputs.componentAlias || componentName;
-  const solutionName: string = inputs.solutionName || _toKebabCase(componentName);
+  const solutionName: string = inputs.solutionName || toKebabCase(componentName);
   const componentDescription: string = inputs.componentDescription || `${componentName} description`;
 
   const componentId: string = ciMode ? uuidv5(`component:${componentAlias}`, CI_NAMESPACE) : randomUUID();
@@ -127,7 +127,17 @@ function _splitWords(input: string): string[] {
   return spaced.split(/[^a-zA-Z0-9]+/).filter((w) => w.length > 0);
 }
 
-function _toKebabCase(input: string): string {
+/**
+ * Converts a string to kebab-case (e.g. "Hello World" → "hello-world").
+ *
+ * @remarks
+ * Used internally for the default `solution_name` and exported for callers
+ * (such as the CLI) that need the same derivation before the full built-in
+ * context is available.
+ *
+ * @public
+ */
+export function toKebabCase(input: string): string {
   return _splitWords(input)
     .map((w) => w.toLowerCase())
     .join('-');
