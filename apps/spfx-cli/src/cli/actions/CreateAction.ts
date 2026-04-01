@@ -127,7 +127,6 @@ export class CreateAction extends SPFxActionBase {
 
   protected override async onExecuteAsync(): Promise<void> {
     const terminal: Terminal = this._terminal;
-    const log: SPFxScaffoldLog = new SPFxScaffoldLog();
 
     try {
       // Get component name and validate
@@ -147,6 +146,9 @@ export class CreateAction extends SPFxActionBase {
       const rawTargetDir: string | undefined = this._targetDirParameter.value?.trim();
       const targetDir: string =
         rawTargetDir && rawTargetDir.length > 0 ? rawTargetDir : `${process.cwd()}/${solutionName}`;
+
+      const log: SPFxScaffoldLog = await SPFxScaffoldLog.loadAsync(targetDir);
+      const isExistingProject: boolean = log.hasEntries;
 
       const templateName: string = this._templateParameter.value;
       const options: IScaffoldProfile = {
@@ -231,6 +233,8 @@ export class CreateAction extends SPFxActionBase {
       });
 
       const packageManager: PackageManager | 'none' = this._packageManagerParameter.value;
+      const previousPackageManager: string | undefined = log.lastPackageManager;
+
       log.append({
         kind: 'package-manager-selected',
         packageManager,
@@ -242,8 +246,20 @@ export class CreateAction extends SPFxActionBase {
       await writer.writeAsync(templateFs, targetDir, { log });
 
       if (packageManager !== 'none') {
-        await _runInstallAsync(packageManager, targetDir, terminal, log);
+        let resolvedPackageManager: PackageManager = packageManager;
+
+        if (isExistingProject && previousPackageManager && previousPackageManager !== packageManager) {
+          terminal.writeWarningLine(
+            `${this._packageManagerParameter.longName} "${packageManager}" is overridden by ` +
+              `"${previousPackageManager}" from the existing project's scaffold log.`
+          );
+          resolvedPackageManager = previousPackageManager as PackageManager;
+        }
+
+        await _runInstallAsync(resolvedPackageManager, targetDir, terminal, log);
       }
+
+      await log.saveAsync(targetDir);
     } catch (error: unknown) {
       const message: string = error instanceof Error ? error.message : String(error);
       terminal.writeErrorLine(`Error creating SPFx component: ${message}`);

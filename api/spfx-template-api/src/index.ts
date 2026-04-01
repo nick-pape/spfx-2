@@ -51,5 +51,6 @@ export {
   type IPackageManagerInstallCompletedEvent,
   type ISPFxScaffoldEvent,
   SPFxScaffoldLog,
-  type ISPFxScaffoldEventInput
+  type ISPFxScaffoldEventInput,
+  SCAFFOLD_LOG_FILENAME
 } from './logging/index';

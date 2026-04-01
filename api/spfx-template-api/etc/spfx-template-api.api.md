@@ -192,6 +192,9 @@ export class PublicGitHubRepositorySource extends BaseSPFxTemplateRepositorySour
 }
 
 // @public
+export const SCAFFOLD_LOG_FILENAME: string;
+
+// @public
 export class ServeJsonMergeHelper extends JsonMergeHelper {
     // (undocumented)
     readonly fileRelativePath: string;
@@ -213,6 +216,10 @@ export class SPFxScaffoldLog {
     getEventsOfKind<K extends ISPFxScaffoldEvent['kind']>(kind: K): Extract<ISPFxScaffoldEvent, {
         kind: K;
     }>[];
+    get hasEntries(): boolean;
+    get lastPackageManager(): string | undefined;
+    static loadAsync(targetDir: string): Promise<SPFxScaffoldLog>;
+    saveAsync(targetDir: string): Promise<void>;
     toJsonl(): string;
 }
 

@@ -49,6 +49,7 @@ Scaffolds a new SPFx component. Templates are pulled from the [SharePoint/spfx](
 | `--template-url URL` | `https://github.com/SharePoint/spfx` | Custom GitHub template repository |
 | `--local-source PATH` | — | Path to a local template folder (repeatable) |
 | `--remote-source URL` | — | Public GitHub repo to include as an additional template source (repeatable) |
+| `--package-manager {npm,pnpm,yarn,none}` | `none` | Package manager to use for dependency installation after scaffolding. Ignored with a warning for existing projects (detected via `.spfx-scaffold.jsonl`) |
 
 ### Environment variables
 
