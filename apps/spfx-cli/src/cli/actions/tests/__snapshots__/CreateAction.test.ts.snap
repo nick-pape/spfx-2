@@ -87,7 +87,7 @@ Array [
 ]
 `;
 
-exports[`CreateAction --param applies default values for optional params 1`] = `
+exports[`CreateAction --param does not error for optional params without a value 1`] = `
 Array [
   "[    log] Using GitHub template source: https://github.com/SharePoint/spfx[n]",
   "[    log] [Mocked SPFxTemplateCollection][n]",

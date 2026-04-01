@@ -648,17 +648,29 @@ describe('CreateAction', () => {
       mockTemplate.getParameters.mockReturnValue({
         greeting: { type: 'string', description: 'A greeting' }
       });
-      await expect(runCreateAsync()).rejects.toThrow(/Missing required template parameters: greeting/);
+      await expect(runCreateAsync()).rejects.toThrow(/Missing required template parameter/);
     });
 
-    it('applies default values for optional params', async () => {
+    it('does not error for optional params without a value', async () => {
       mockTemplate.getParameters.mockReturnValue({
         greeting: { type: 'string', description: 'A greeting', required: false, default: 'hi' }
       });
       await runCreateAsync();
-      expect(mockTemplate.renderAsync).toHaveBeenCalledWith(
-        expect.objectContaining({ greeting: 'hi' }),
-        expect.anything()
+      // Defaults are applied by renderAsync, not the CLI — just verify no throw
+    });
+
+    it('rejects --param keys that collide with built-in context variables', async () => {
+      await expect(runCreateAsync(['--param', 'componentName=override'])).rejects.toThrow(
+        /conflicts with a built-in context variable/
+      );
+    });
+
+    it('rejects unknown --param keys not declared by the template', async () => {
+      mockTemplate.getParameters.mockReturnValue({
+        greeting: { type: 'string', description: 'A greeting' }
+      });
+      await expect(runCreateAsync(['--param', 'greeting=hi', '--param', 'typo=oops'])).rejects.toThrow(
+        /Unknown template parameter.*typo/
       );
     });
   });

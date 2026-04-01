@@ -23,6 +23,7 @@ import {
   SPFxScaffoldLog,
   type TemplateOutput,
   buildBuiltInContext,
+  BUILT_IN_PARAMETER_NAMES,
   type ISPFxBuiltInContext,
   type ISPFxTemplateParameterDefinition,
   toKebabCase
@@ -214,7 +215,7 @@ export class CreateAction extends SPFxActionBase {
         { ciMode }
       );
 
-      // Parse custom --param values and validate against template parameter definitions
+      // Parse custom --param values
       const customParams: Map<string, string> = new Map<string, string>();
       for (const paramValue of this._paramsParameter.values) {
         const eqIndex: number = paramValue.indexOf('=');
@@ -223,25 +224,40 @@ export class CreateAction extends SPFxActionBase {
             `Invalid ${this._paramsParameter.longName} format: "${paramValue}". Expected key=value format.`
           );
         }
-        customParams.set(paramValue.substring(0, eqIndex), paramValue.substring(eqIndex + 1));
+        const key: string = paramValue.substring(0, eqIndex);
+        if (BUILT_IN_PARAMETER_NAMES.has(key)) {
+          throw new Error(
+            `${this._paramsParameter.longName} "${key}" conflicts with a built-in context variable and cannot be overridden.`
+          );
+        }
+        customParams.set(key, paramValue.substring(eqIndex + 1));
       }
 
+      // Validate against the template's declared parameter definitions
       const templateParams: Record<string, ISPFxTemplateParameterDefinition> | undefined =
         template.getParameters();
       if (templateParams) {
-        const missing: string[] = [];
+        const errors: string[] = [];
+
+        // Reject unknown keys not declared by the template
+        for (const key of customParams.keys()) {
+          if (!(key in templateParams)) {
+            errors.push(`Unknown template parameter: "${key}"`);
+          }
+        }
+
+        // Check for missing required params and apply defaults
         for (const [key, paramDef] of Object.entries(templateParams)) {
           const isRequired: boolean = paramDef.required !== false;
           if (isRequired && !customParams.has(key)) {
-            missing.push(key);
-          } else if (!customParams.has(key) && paramDef.default !== undefined) {
-            customParams.set(key, paramDef.default);
+            errors.push(`Missing required template parameter: "${key}"`);
           }
         }
-        if (missing.length > 0) {
+
+        if (errors.length > 0) {
           throw new Error(
-            `Missing required template parameters: ${missing.join(', ')}. ` +
-              `Use ${this._paramsParameter.longName} key=value to provide them.`
+            `${errors.join('. ')}. ` +
+              `Use ${this._paramsParameter.longName} key=value to provide custom parameters.`
           );
         }
       }

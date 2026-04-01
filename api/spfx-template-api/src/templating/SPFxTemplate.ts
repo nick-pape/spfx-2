@@ -208,7 +208,7 @@ export class SPFxTemplate {
    * @returns A Promise that resolves to a TemplateOutput containing the rendered files
    */
   public async renderAsync(context: object, options?: IRenderOptions): Promise<TemplateOutput> {
-    // Validate custom parameters: check required presence and correct types.
+    // Validate custom parameters and apply declared defaults.
     const templateParams: Record<string, ISPFxTemplateParameterDefinition> | undefined =
       this._definition.parameters;
     if (templateParams) {
@@ -221,6 +221,8 @@ export class SPFxTemplate {
         if (value === undefined) {
           if (isRequired) {
             missing.push(key);
+          } else if (paramDef.default !== undefined) {
+            contextRecord[key] = paramDef.default;
           }
         } else if (typeof value !== 'string') {
           wrongType.push(key);
