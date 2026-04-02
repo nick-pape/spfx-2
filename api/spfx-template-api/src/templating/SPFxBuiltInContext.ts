@@ -3,6 +3,7 @@
 
 import { randomUUID } from 'node:crypto';
 
+import { kebabCase } from 'lodash';
 import { v5 as uuidv5 } from 'uuid';
 
 /**
@@ -149,28 +150,16 @@ export function buildBuiltInContext(
 }
 
 /**
- * Splits a string into words, handling camelCase, PascalCase, hyphen-case,
- * snake_case, and whitespace boundaries.
- */
-function _splitWords(input: string): string[] {
-  // Insert a boundary before uppercase letters that follow lowercase letters (camelCase)
-  const spaced: string = input.replace(/([a-z])([A-Z])/g, '$1 $2');
-  // Split on non-alphanumeric characters and filter empty segments
-  return spaced.split(/[^a-zA-Z0-9]+/).filter((w) => w.length > 0);
-}
-
-/**
  * Converts a string to kebab-case (e.g. "Hello World" → "hello-world").
  *
  * @remarks
- * Used internally for the default `solution_name` and exported for callers
- * (such as the CLI) that need the same derivation before the full built-in
- * context is available.
+ * Delegates to lodash `kebabCase` so that `solution_name` is consistent with
+ * the `.hyphen` casing produced by {@link createCasedString}.
+ * Exported for callers (such as the CLI) that need the same derivation before
+ * the full built-in context is available.
  *
  * @public
  */
 export function toKebabCase(input: string): string {
-  return _splitWords(input)
-    .map((w) => w.toLowerCase())
-    .join('-');
+  return kebabCase(input);
 }
