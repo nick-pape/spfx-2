@@ -16,12 +16,6 @@ export abstract class BaseSPFxTemplateRepositorySource {
 }
 
 // @public
-export function buildBuiltInContext(inputs: ISPFxBuiltInContextInputs, options?: IBuildBuiltInContextOptions): ISPFxBuiltInContext;
-
-// @public
-export const BUILT_IN_PARAMETER_NAMES: ReadonlySet<keyof ISPFxBuiltInContext>;
-
-// @public
 export class ConfigJsonMergeHelper extends JsonMergeHelper {
     // (undocumented)
     readonly fileRelativePath: string;
@@ -37,11 +31,6 @@ export const ENGINE_VERSION: string;
 
 // @public
 export type FileWriteOutcome = 'new' | 'merged' | 'preserved' | 'unchanged';
-
-// @public
-export interface IBuildBuiltInContextOptions {
-    ciMode?: boolean;
-}
 
 // @public
 export interface ICasedString {
@@ -109,31 +98,15 @@ export interface IRenderOptions {
 export function _isBinaryFile(filePath: string): boolean;
 
 // @public
-export interface ISPFxBuiltInContext {
-    componentAlias: string;
-    componentDescription: string;
-    componentId: string;
-    componentName: string;
-    featureId: string;
-    libraryName: string;
-    solution_name: string;
-    solutionId: string;
-    spfxVersion: string;
-    spfxVersionForBadgeUrl: string;
+export interface ISessionStartedEvent extends ISPFxScaffoldEventBase {
+    // (undocumented)
+    cliVersion: string;
+    // (undocumented)
+    kind: 'session-started';
 }
 
 // @public
-export interface ISPFxBuiltInContextInputs {
-    componentAlias?: string;
-    componentDescription?: string;
-    componentName: string;
-    libraryName: string;
-    solutionName?: string;
-    spfxVersion: string;
-}
-
-// @public
-export type ISPFxScaffoldEvent = ITemplateRenderedEvent | IPackageManagerSelectedEvent | IFileWriteEvent | IPackageManagerInstallCompletedEvent;
+export type ISPFxScaffoldEvent = ISessionStartedEvent | ITemplateRenderedEvent | IPackageManagerSelectedEvent | IFileWriteEvent | IPackageManagerInstallCompletedEvent;
 
 // @public
 export interface ISPFxScaffoldEventBase {
@@ -150,6 +123,10 @@ export type ISPFxScaffoldEventInput = ISPFxScaffoldEvent extends infer E ? E ext
 export interface ISPFxTemplateJson {
     $schema?: string;
     category: SPFxTemplateCategory;
+    contextSchema?: Record<string, {
+        type: 'string';
+        description: string;
+    }>;
     description?: string;
     minimumEngineVersion?: string;
     name: string;
@@ -223,6 +200,9 @@ export class PublicGitHubRepositorySource extends BaseSPFxTemplateRepositorySour
 }
 
 // @public
+export const SCAFFOLD_LOG_FILENAME: string;
+
+// @public
 export class ServeJsonMergeHelper extends JsonMergeHelper {
     // (undocumented)
     readonly fileRelativePath: string;
@@ -244,6 +224,10 @@ export class SPFxScaffoldLog {
     getEventsOfKind<K extends ISPFxScaffoldEvent['kind']>(kind: K): Extract<ISPFxScaffoldEvent, {
         kind: K;
     }>[];
+    get hasEntries(): boolean;
+    get lastPackageManager(): string | undefined;
+    static loadFromFolderAsync(targetDir: string): Promise<SPFxScaffoldLog>;
+    saveToFolderAsync(targetDir: string): Promise<void>;
     toJsonl(): string;
 }
 
@@ -257,7 +241,7 @@ export class SPFxTemplate {
     static fromMemoryAsync(templateName: string, templateJsonData: unknown, fileMap: Map<string, Buffer>): Promise<SPFxTemplate>;
     get minimumEngineVersion(): string | undefined;
     get name(): string;
-    renderAsync(context: Record<string, string>, options?: IRenderOptions): Promise<TemplateOutput>;
+    renderAsync(context: object, options?: IRenderOptions): Promise<TemplateOutput>;
     get spfxVersion(): string;
     toString(): string;
     get unknownFields(): readonly string[];
@@ -280,6 +264,10 @@ export const SPFxTemplateDefinitionSchema: z.ZodType<ISPFxTemplateJson>;
 export class SPFxTemplateJsonFile {
     constructor(data: ISPFxTemplateJson);
     get category(): SPFxTemplateCategory;
+    get contextSchema(): Record<string, {
+        type: 'string';
+        description: string;
+    }> | undefined;
     get description(): string | undefined;
     static fromFileAsync(filePath: string): Promise<SPFxTemplateJsonFile>;
     static fromFolderAsync(folderPath: string): Promise<SPFxTemplateJsonFile>;
@@ -315,8 +303,5 @@ export class TemplateOutput {
     read(relativePath: string): string | Buffer | undefined;
     write(relativePath: string, contents: string | Buffer): void;
 }
-
-// @public
-export function toHyphenCase(input: string): string;
 
 ```

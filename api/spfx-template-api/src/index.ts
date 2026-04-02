@@ -50,6 +50,7 @@ export {
 } from './writing/index';
 export {
   type ISPFxScaffoldEventBase,
+  type ISessionStartedEvent,
   type ITemplateRenderedEvent,
   type IPackageManagerSelectedEvent,
   type FileWriteOutcome,
@@ -57,5 +58,6 @@ export {
   type IPackageManagerInstallCompletedEvent,
   type ISPFxScaffoldEvent,
   SPFxScaffoldLog,
-  type ISPFxScaffoldEventInput
+  type ISPFxScaffoldEventInput,
+  SCAFFOLD_LOG_FILENAME
 } from './logging/index';
