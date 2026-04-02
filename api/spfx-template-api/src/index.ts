@@ -23,7 +23,7 @@ export {
   type IBuildBuiltInContextOptions,
   BUILT_IN_PARAMETER_NAMES,
   buildBuiltInContext,
-  toKebabCase,
+  toHyphenCase,
   ENGINE_VERSION
 } from './templating/index';
 export {

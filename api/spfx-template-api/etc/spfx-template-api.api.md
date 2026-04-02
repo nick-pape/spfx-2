@@ -317,6 +317,6 @@ export class TemplateOutput {
 }
 
 // @public
-export function toKebabCase(input: string): string;
+export function toHyphenCase(input: string): string;
 
 ```

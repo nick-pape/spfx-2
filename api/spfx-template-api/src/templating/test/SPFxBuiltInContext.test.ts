@@ -18,7 +18,7 @@ const DEFAULT_INPUTS: ISPFxBuiltInContextInputs = {
 
 describe(buildBuiltInContext.name, () => {
   describe('solution_name derivation', () => {
-    it('should derive kebab-case from componentName when solutionName is not provided', () => {
+    it('should derive hyphen-case from componentName when solutionName is not provided', () => {
       const ctx: ISPFxBuiltInContext = buildBuiltInContext(DEFAULT_INPUTS);
       expect(ctx.solution_name).toBe('hello-world');
     });

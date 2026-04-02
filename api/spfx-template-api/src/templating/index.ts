@@ -17,6 +17,6 @@ export {
   type IBuildBuiltInContextOptions,
   BUILT_IN_PARAMETER_NAMES,
   buildBuiltInContext,
-  toKebabCase
+  toHyphenCase
 } from './SPFxBuiltInContext';
 export { ENGINE_VERSION } from '../engineVersion';

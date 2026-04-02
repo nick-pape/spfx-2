@@ -12,7 +12,7 @@ Every template automatically receives 10 built-in variables from `buildBuiltInCo
 | `componentAlias` | Manifest alias (defaults to componentName) | "Hello World" |
 | `componentDescription` | Description (defaults to "{name} description") | "Hello World description" |
 | `libraryName` | npm package name | "@contoso/hello-world" |
-| `solution_name` | Kebab-cased solution folder name | "hello-world" |
+| `solution_name` | Hyphen-cased solution folder name | "hello-world" |
 | `spfxVersion` | SPFx version from template manifest | "1.22.2" |
 | `spfxVersionForBadgeUrl` | Version with hyphens escaped for shields.io | "1.22.2" |
 | `componentId` | Component GUID | random or deterministic in CI |

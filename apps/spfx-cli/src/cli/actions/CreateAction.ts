@@ -23,7 +23,7 @@ import {
   type TemplateOutput,
   buildBuiltInContext,
   type ISPFxBuiltInContext,
-  toKebabCase
+  toHyphenCase
 } from '@microsoft/spfx-template-api';
 
 import { SOLUTION_NAME_PATTERN } from '../../utilities/validation';
@@ -138,9 +138,9 @@ export class CreateAction extends SPFxActionBase {
           `Invalid solution name: "${rawSolutionName}". Must contain only alphanumeric characters, hyphens, and underscores.`
         );
       }
-      // Compute a preliminary kebab-case solution name for targetDir before the
+      // Compute a preliminary hyphen-case solution name for targetDir before the
       // template is loaded. buildBuiltInContext will produce the same value.
-      const solutionName: string = rawSolutionName || toKebabCase(componentName);
+      const solutionName: string = rawSolutionName || toHyphenCase(componentName);
 
       const rawTargetDir: string | undefined = this._targetDirParameter.value?.trim();
       const targetDir: string =

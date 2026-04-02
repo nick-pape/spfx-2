@@ -17,7 +17,7 @@ export interface ISPFxBuiltInContextInputs {
   libraryName: string;
   /** SPFx version from the template manifest */
   spfxVersion: string;
-  /** Optional override for the solution folder name; defaults to kebab-cased componentName */
+  /** Optional override for the solution folder name; defaults to hyphen-cased componentName */
   solutionName?: string;
   /** Optional alias used in the component manifest; defaults to componentName */
   componentAlias?: string;
@@ -30,7 +30,7 @@ export interface ISPFxBuiltInContextInputs {
  * @public
  */
 export interface ISPFxBuiltInContext {
-  /** Kebab-cased solution folder name (e.g. "hello-world"). */
+  /** Hyphen-cased solution folder name (e.g. "hello-world"). */
   solution_name: string;
   /** npm package / library name (e.g. "\@contoso/hello-world"). */
   libraryName: string;
@@ -117,7 +117,7 @@ export function buildBuiltInContext(
     libraryName,
     spfxVersion,
     componentAlias = componentName,
-    solutionName = toKebabCase(componentName),
+    solutionName = toHyphenCase(componentName),
     componentDescription = `${componentName} description`
   } = inputs;
   const ciMode: boolean = options?.ciMode === true;
@@ -150,7 +150,7 @@ export function buildBuiltInContext(
 }
 
 /**
- * Converts a string to kebab-case (e.g. "Hello World" → "hello-world").
+ * Converts a string to hyphen-case (e.g. "Hello World" → "hello-world").
  *
  * @remarks
  * Delegates to lodash `kebabCase` so that `solution_name` is consistent with
@@ -160,6 +160,6 @@ export function buildBuiltInContext(
  *
  * @public
  */
-export function toKebabCase(input: string): string {
+export function toHyphenCase(input: string): string {
   return kebabCase(input);
 }
