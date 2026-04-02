@@ -207,36 +207,27 @@ export class SPFxTemplate {
    * @param options - Optional render options
    * @returns A Promise that resolves to a TemplateOutput containing the rendered files
    */
-  public async renderAsync(context: object, options?: IRenderOptions): Promise<TemplateOutput> {
+  public async renderAsync(
+    context: Record<string, string>,
+    options?: IRenderOptions
+  ): Promise<TemplateOutput> {
     // Validate custom parameters and apply declared defaults.
     const templateParams: Record<string, ISPFxTemplateParameterDefinition> | undefined =
       this._definition.parameters;
     if (templateParams) {
-      const contextRecord: Record<string, unknown> = context as Record<string, unknown>;
       const missing: string[] = [];
-      const wrongType: string[] = [];
       for (const [key, paramDef] of Object.entries(templateParams)) {
         const isRequired: boolean = paramDef.required !== false;
-        const value: unknown = contextRecord[key];
-        if (value === undefined) {
+        if (context[key] === undefined) {
           if (isRequired) {
             missing.push(key);
-          } else if (paramDef.default !== undefined) {
-            contextRecord[key] = paramDef.default;
+          } else if (paramDef.defaultValue !== undefined) {
+            context[key] = paramDef.defaultValue;
           }
-        } else if (typeof value !== 'string') {
-          wrongType.push(key);
         }
       }
-      const errors: string[] = [];
       if (missing.length > 0) {
-        errors.push(`Missing required template parameters: ${missing.join(', ')}`);
-      }
-      if (wrongType.length > 0) {
-        errors.push(`Template parameters must be strings: ${wrongType.join(', ')}`);
-      }
-      if (errors.length > 0) {
-        throw new Error(errors.join('. '));
+        throw new Error(`Missing required template parameters: ${missing.join(', ')}`);
       }
     }
 
@@ -304,7 +295,7 @@ export class SPFxTemplate {
  * non-string values are passed through unchanged. Flat entries include dotted sub-keys
  * for each casing variant so that `{componentName.pascal}` resolves in filenames.
  */
-function _buildRenderContext(context: object): {
+function _buildRenderContext(context: Record<string, string>): {
   ejsContext: Record<string, unknown>;
   flatEntries: Map<string, string>;
 } {

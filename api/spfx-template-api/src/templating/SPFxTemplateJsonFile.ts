@@ -8,7 +8,7 @@ import { valid as semverValid } from 'semver';
 
 import { FileSystem } from '@rushstack/node-core-library';
 
-import { BUILT_IN_PARAMETER_NAMES } from './SPFxBuiltInContext';
+import { BUILT_IN_PARAMETER_NAMES, type ISPFxBuiltInContext } from './SPFxBuiltInContext';
 
 const NAME_MIN_LENGTH: number = 3;
 const NAME_MAX_LENGTH: number = 100;
@@ -57,7 +57,7 @@ export interface ISPFxTemplateParameterDefinition {
    * @remarks
    * Only meaningful when `required` is `false`.
    */
-  default?: string;
+  defaultValue?: string;
 }
 
 /**
@@ -122,17 +122,22 @@ const _templateJsonSchemaShape = {
           type: z.enum(['string']),
           description: z.string(),
           required: z.boolean().optional(),
-          default: z.string().optional()
+          defaultValue: z.string().optional()
         })
-        .refine((p) => p.default === undefined || p.required === false, {
-          message: '"default" is only valid when "required" is false'
+        .refine((p) => p.defaultValue === undefined || p.required === false, {
+          message: '"defaultValue" is only valid when "required" is false'
         })
     )
     .optional()
     .refine(
       (params) => {
-        if (!params) return true;
-        return Object.keys(params).every((key) => !BUILT_IN_PARAMETER_NAMES.has(key));
+        if (!params) {
+          return true;
+        } else {
+          return Object.keys(params).every(
+            (key) => !BUILT_IN_PARAMETER_NAMES.has(key as keyof ISPFxBuiltInContext)
+          );
+        }
       },
       {
         message: `Custom parameter names must not collide with built-in names: ${Array.from(BUILT_IN_PARAMETER_NAMES).join(', ')}`

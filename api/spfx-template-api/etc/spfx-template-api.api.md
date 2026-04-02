@@ -19,7 +19,7 @@ export abstract class BaseSPFxTemplateRepositorySource {
 export function buildBuiltInContext(inputs: ISPFxBuiltInContextInputs, options?: IBuildBuiltInContextOptions): ISPFxBuiltInContext;
 
 // @public
-export const BUILT_IN_PARAMETER_NAMES: ReadonlySet<string>;
+export const BUILT_IN_PARAMETER_NAMES: ReadonlySet<keyof ISPFxBuiltInContext>;
 
 // @public
 export class ConfigJsonMergeHelper extends JsonMergeHelper {
@@ -160,7 +160,7 @@ export interface ISPFxTemplateJson {
 
 // @public
 export interface ISPFxTemplateParameterDefinition {
-    default?: string;
+    defaultValue?: string;
     description: string;
     required?: boolean;
     type: 'string';
@@ -267,7 +267,7 @@ export class SPFxTemplate {
     getParameters(): Record<string, ISPFxTemplateParameterDefinition> | undefined;
     get minimumEngineVersion(): string | undefined;
     get name(): string;
-    renderAsync(context: object, options?: IRenderOptions): Promise<TemplateOutput>;
+    renderAsync(context: Record<string, string>, options?: IRenderOptions): Promise<TemplateOutput>;
     get spfxVersion(): string;
     toString(): string;
     get unknownFields(): readonly string[];

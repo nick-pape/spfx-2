@@ -209,25 +209,24 @@ export class CreateAction extends SPFxActionBase {
           libraryName: this._libraryNameParameter.value,
           spfxVersion: template.spfxVersion,
           solutionName: rawSolutionName || undefined,
-          componentAlias: this._componentAliasParameter.value || undefined,
-          componentDescription: this._componentDescriptionParameter.value || undefined
+          componentAlias: this._componentAliasParameter.value?.trim() || undefined,
+          componentDescription: this._componentDescriptionParameter.value?.trim() || undefined
         },
         { ciMode }
       );
 
       // Parse custom --param values
+      const { values: paramValues, longName: paramLongName } = this._paramsParameter;
       const customParams: Map<string, string> = new Map<string, string>();
-      for (const paramValue of this._paramsParameter.values) {
+      for (const paramValue of paramValues) {
         const eqIndex: number = paramValue.indexOf('=');
         if (eqIndex <= 0) {
-          throw new Error(
-            `Invalid ${this._paramsParameter.longName} format: "${paramValue}". Expected key=value format.`
-          );
+          throw new Error(`Invalid ${paramLongName} format: "${paramValue}". Expected key=value format.`);
         }
         const key: string = paramValue.substring(0, eqIndex);
-        if (BUILT_IN_PARAMETER_NAMES.has(key)) {
+        if (BUILT_IN_PARAMETER_NAMES.has(key as keyof ISPFxBuiltInContext)) {
           throw new Error(
-            `${this._paramsParameter.longName} "${key}" conflicts with a built-in context variable and cannot be overridden.`
+            `${paramLongName} "${key}" conflicts with a built-in context variable and cannot be overridden.`
           );
         }
         customParams.set(key, paramValue.substring(eqIndex + 1));
@@ -246,7 +245,7 @@ export class CreateAction extends SPFxActionBase {
           }
         }
 
-        // Check for missing required params and apply defaults
+        // Check for missing required params
         for (const [key, paramDef] of Object.entries(templateParams)) {
           const isRequired: boolean = paramDef.required !== false;
           if (isRequired && !customParams.has(key)) {
@@ -256,8 +255,7 @@ export class CreateAction extends SPFxActionBase {
 
         if (errors.length > 0) {
           throw new Error(
-            `${errors.join('. ')}. ` +
-              `Use ${this._paramsParameter.longName} key=value to provide custom parameters.`
+            `${errors.join('. ')}. ` + `Use ${paramLongName} key=value to provide custom parameters.`
           );
         }
       }

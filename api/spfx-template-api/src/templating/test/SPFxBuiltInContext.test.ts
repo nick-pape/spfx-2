@@ -164,7 +164,7 @@ describe(buildBuiltInContext.name, () => {
     it('should contain all keys from the built-in context', () => {
       const ctx: ISPFxBuiltInContext = buildBuiltInContext(DEFAULT_INPUTS);
       for (const key of Object.keys(ctx)) {
-        expect(BUILT_IN_PARAMETER_NAMES.has(key)).toBe(true);
+        expect(BUILT_IN_PARAMETER_NAMES.has(key as keyof ISPFxBuiltInContext)).toBe(true);
       }
     });
 

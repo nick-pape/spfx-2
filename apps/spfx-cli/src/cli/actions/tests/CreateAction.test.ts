@@ -653,7 +653,7 @@ describe('CreateAction', () => {
 
     it('does not error for optional params without a value', async () => {
       mockTemplate.getParameters.mockReturnValue({
-        greeting: { type: 'string', description: 'A greeting', required: false, default: 'hi' }
+        greeting: { type: 'string', description: 'A greeting', required: false, defaultValue: 'hi' }
       });
       await runCreateAsync();
       // Defaults are applied by renderAsync, not the CLI — just verify no throw

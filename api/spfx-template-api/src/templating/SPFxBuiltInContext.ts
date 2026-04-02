@@ -64,11 +64,23 @@ export interface IBuildBuiltInContextOptions {
 }
 
 /**
+ * Helper that enforces the array is exactly the keys of ISPFxBuiltInContext:
+ * - `T extends ReadonlyArray<keyof ISPFxBuiltInContext>` — no extra keys
+ * - `[keyof ISPFxBuiltInContext] extends [T[number]]` — no missing keys
+ * The `const` modifier on T ensures elements are inferred as string literals.
+ */
+function _makeBuiltInParameterNames<const T extends ReadonlyArray<keyof ISPFxBuiltInContext>>(
+  names: [keyof ISPFxBuiltInContext] extends [T[number]] ? T : never
+): ReadonlySet<keyof ISPFxBuiltInContext> {
+  return new Set(names);
+}
+
+/**
  * The set of context variable names that are automatically provided by the engine.
  * Template authors must not declare custom parameters with any of these names.
  * @public
  */
-export const BUILT_IN_PARAMETER_NAMES: ReadonlySet<string> = new Set<string>([
+export const BUILT_IN_PARAMETER_NAMES: ReadonlySet<keyof ISPFxBuiltInContext> = _makeBuiltInParameterNames([
   'solution_name',
   'libraryName',
   'spfxVersion',
@@ -100,16 +112,28 @@ export function buildBuiltInContext(
   inputs: ISPFxBuiltInContextInputs,
   options?: IBuildBuiltInContextOptions
 ): ISPFxBuiltInContext {
-  const { componentName, libraryName, spfxVersion } = inputs;
+  const {
+    componentName,
+    libraryName,
+    spfxVersion,
+    componentAlias = componentName,
+    solutionName = toKebabCase(componentName),
+    componentDescription = `${componentName} description`
+  } = inputs;
   const ciMode: boolean = options?.ciMode === true;
 
-  const componentAlias: string = inputs.componentAlias || componentName;
-  const solutionName: string = inputs.solutionName || toKebabCase(componentName);
-  const componentDescription: string = inputs.componentDescription || `${componentName} description`;
-
-  const componentId: string = ciMode ? uuidv5(`component:${componentAlias}`, CI_NAMESPACE) : randomUUID();
-  const solutionId: string = ciMode ? CI_SOLUTION_ID : randomUUID();
-  const featureId: string = ciMode ? uuidv5(`feature:${componentAlias}`, CI_NAMESPACE) : randomUUID();
+  let componentId: string;
+  let solutionId: string;
+  let featureId: string;
+  if (ciMode) {
+    componentId = uuidv5(`component:${componentAlias}`, CI_NAMESPACE);
+    solutionId = CI_SOLUTION_ID;
+    featureId = uuidv5(`feature:${componentAlias}`, CI_NAMESPACE);
+  } else {
+    componentId = randomUUID();
+    solutionId = randomUUID();
+    featureId = randomUUID();
+  }
 
   return {
     solution_name: solutionName,
