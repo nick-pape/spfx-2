@@ -18,6 +18,12 @@ export {
   type IRenderOptions,
   SPFX_TEMPLATE_CATEGORIES,
   type SPFxTemplateCategory,
+  type ISPFxBuiltInContextInputs,
+  type ISPFxBuiltInContext,
+  type IBuildBuiltInContextOptions,
+  BUILT_IN_PARAMETER_NAMES,
+  buildBuiltInContext,
+  toHyphenCase,
   ENGINE_VERSION
 } from './templating/index';
 export {

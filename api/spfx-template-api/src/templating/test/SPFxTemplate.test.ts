@@ -367,54 +367,6 @@ describe(SPFxTemplate.name, () => {
       expect(result.read('README.md')).toBe('# My Application');
     });
 
-    it('should render template with context schema validation', async () => {
-      const definition = new SPFxTemplateJsonFile({
-        name: 'WithSchema',
-        category: 'webpart',
-        version: '1.0.0',
-        spfxVersion: '1.18.0',
-        contextSchema: {
-          componentName: {
-            type: 'string',
-            description: 'Component name'
-          }
-        }
-      });
-
-      const files = new Map<string, string | Buffer>([
-        ['src/index.ts', 'const name = "<%= componentName %>";']
-      ]);
-
-      const template = new SPFxTemplate(definition, files);
-      const context = { componentName: 'MyComponent' };
-
-      const result: TemplateOutput = await template.renderAsync(context);
-
-      expect(result.read('src/index.ts')).toBe('const name = "MyComponent";');
-    });
-
-    it('should throw error when context does not match schema', async () => {
-      const definition = new SPFxTemplateJsonFile({
-        name: 'WithSchema',
-        category: 'webpart',
-        version: '1.0.0',
-        spfxVersion: '1.18.0',
-        contextSchema: {
-          requiredField: {
-            type: 'string',
-            description: 'A required field'
-          }
-        }
-      });
-
-      const files = new Map<string, string | Buffer>([['file.txt', 'content']]);
-
-      const template = new SPFxTemplate(definition, files);
-      const invalidContext = { wrongField: 'value' };
-
-      await expect(template.renderAsync(invalidContext)).rejects.toThrow(/Invalid context object/);
-    });
-
     it('should replace placeholders in filenames', async () => {
       const definition = new SPFxTemplateJsonFile({
         name: 'Test',

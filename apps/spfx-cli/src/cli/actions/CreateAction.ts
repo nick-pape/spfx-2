@@ -5,8 +5,6 @@ import type { ChildProcess } from 'node:child_process';
 
 type PackageManager = 'npm' | 'pnpm' | 'yarn';
 
-import { kebabCase } from 'lodash';
-import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import * as z from 'zod';
 
 import { Executable, Path, type IWaitForExitResultWithoutOutput } from '@rushstack/node-core-library';
@@ -22,17 +20,15 @@ import {
   type SPFxTemplate,
   SPFxTemplateWriter,
   SPFxScaffoldLog,
-  type TemplateOutput
+  type TemplateOutput,
+  buildBuiltInContext,
+  type ISPFxBuiltInContext,
+  toHyphenCase
 } from '@microsoft/spfx-template-api';
 
 import { SOLUTION_NAME_PATTERN } from '../../utilities/validation';
 import { SPFxActionBase } from './SPFxActionBase';
 import packageJson from '../../../package.json';
-
-// Deterministic namespace for CI mode GUIDs, derived from the well-known URL
-// namespace: uuidv5('spfx-cli:ci', '6ba7b810-9dad-11d1-80b4-00c04fd430c8')
-const CI_NAMESPACE: string = '035a23a9-8c9e-569b-ae00-7ff2e4c82fb0';
-const CI_SOLUTION_ID: string = '22222222-2222-2222-2222-222222222222';
 
 const CLI_VERSION: string = packageJson.version;
 
@@ -143,7 +139,9 @@ export class CreateAction extends SPFxActionBase {
           `Invalid solution name: "${rawSolutionName}". Must contain only alphanumeric characters, hyphens, and underscores.`
         );
       }
-      const solutionName: string = rawSolutionName || kebabCase(componentName);
+      // Compute a preliminary hyphen-case solution name for targetDir before the
+      // template is loaded. buildBuiltInContext will produce the same value.
+      const solutionName: string = rawSolutionName || toHyphenCase(componentName);
 
       const rawTargetDir: string | undefined = this._targetDirParameter.value?.trim();
       const targetDir: string =
@@ -198,33 +196,28 @@ export class CreateAction extends SPFxActionBase {
         );
       }
 
-      const componentAlias: string = this._componentAliasParameter.value || componentName;
-
       // CI mode is read from an environment variable instead of a ts-command-line
       // parameter so it stays out of --help output. It is an internal/undocumented
       // flag used only by CI pipelines and tests to produce deterministic output.
       // eslint-disable-next-line dot-notation
       const ciMode: boolean = process.env['SPFX_CI_MODE'] === '1';
-      const componentId: string = ciMode ? uuidv5(`component:${componentAlias}`, CI_NAMESPACE) : uuidv4();
-      const solutionId: string = ciMode ? CI_SOLUTION_ID : uuidv4();
-      const featureId: string = ciMode ? uuidv5(`feature:${componentAlias}`, CI_NAMESPACE) : uuidv4();
-      const componentDescription: string =
-        this._componentDescriptionParameter.value || `${componentName} description`;
 
-      const renderContext: Record<string, string> = {
-        solution_name: solutionName,
-        libraryName: this._libraryNameParameter.value,
-        spfxVersion: template.spfxVersion,
-        // The shields.io badge URL uses dashes as separators, so dashes in version numbers
-        // need to be escaped as double dashes to avoid ambiguity. For example, "1.23.0-beta.0" becomes "1.23.0--beta.0".
-        spfxVersionForBadgeUrl: template.spfxVersion.replace(/-/g, '--'),
-        componentId: componentId,
-        featureId: featureId,
-        solutionId: solutionId,
-        componentAlias: componentAlias,
-        componentName: componentName,
-        componentDescription: componentDescription
-      };
+      const builtInContext: ISPFxBuiltInContext = buildBuiltInContext(
+        {
+          componentName,
+          libraryName: this._libraryNameParameter.value,
+          spfxVersion: template.spfxVersion,
+          solutionName: rawSolutionName || undefined,
+          componentAlias: this._componentAliasParameter.value?.trim() || undefined,
+          componentDescription: this._componentDescriptionParameter.value?.trim() || undefined
+        },
+        { ciMode }
+      );
+
+      // Spread into Record<string, string> because ISPFxBuiltInContext uses named
+      // keys (for type-safe BUILT_IN_PARAMETER_NAMES) while renderAsync needs a
+      // general-purpose Record.
+      const renderContext: Record<string, string> = { ...builtInContext };
 
       const templateFs: TemplateOutput = await template.renderAsync(renderContext, {
         retainPhaseScripts: ciMode

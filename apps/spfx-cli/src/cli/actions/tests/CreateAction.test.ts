@@ -1,7 +1,16 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-jest.mock('@microsoft/spfx-template-api');
+jest.mock('@microsoft/spfx-template-api', () => {
+  const actual = jest.requireActual('@microsoft/spfx-template-api');
+  return {
+    ...jest.createMockFromModule<typeof actual>('@microsoft/spfx-template-api'),
+    // buildBuiltInContext and toHyphenCase must use the real implementation so the
+    // render context and solution name are populated correctly in tests.
+    buildBuiltInContext: actual.buildBuiltInContext,
+    toHyphenCase: actual.toHyphenCase
+  };
+});
 jest.mock('@rushstack/node-core-library', () => {
   const actual = jest.requireActual('@rushstack/node-core-library');
   return {

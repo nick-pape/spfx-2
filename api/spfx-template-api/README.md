@@ -19,7 +19,8 @@ import { Terminal, ConsoleTerminalProvider } from '@rushstack/terminal';
 import {
   SPFxTemplateRepositoryManager,
   PublicGitHubRepositorySource,
-  SPFxTemplateWriter
+  SPFxTemplateWriter,
+  buildBuiltInContext
 } from '@microsoft/spfx-template-api';
 
 const terminal = new Terminal(new ConsoleTerminalProvider());
@@ -32,22 +33,19 @@ const templates = await manager.getTemplatesAsync();
 const template = templates.get('webpart-react');
 if (!template) throw new Error('Template not found');
 
-// 2. Render to an in-memory file system
-// String values are automatically wrapped with casing helpers (e.g. componentName.pascal)
-const templateFs = await template.renderAsync({
-  solution_name: 'my-solution',
-  libraryName: 'my-spfx-library',
-  spfxVersion: template.spfxVersion,
-  spfxVersionForBadgeUrl: template.spfxVersion.replace(/-/g, '--'),
-  componentId: '<uuid>',
-  featureId: '<uuid>',
-  solutionId: '<uuid>',
-  componentAlias: 'MyWebPart',
+// 2. Build the render context from CLI inputs
+
+const builtInContext = buildBuiltInContext({
   componentName: 'My Web Part',
-  componentDescription: 'My Web Part description'
+  libraryName: 'my-spfx-library',
+  spfxVersion: template.spfxVersion
 });
 
-// 3. Write files to disk (merges into existing SPFx solutions automatically)
+// 3. Render to an in-memory file system
+// String values are automatically wrapped with casing helpers (e.g. componentName.pascal)
+const templateFs = await template.renderAsync(builtInContext);
+
+// 4. Write files to disk (merges into existing SPFx solutions automatically)
 const writer = new SPFxTemplateWriter();
 await writer.writeAsync(templateFs, '/path/to/output');
 ```
@@ -167,6 +165,11 @@ The writer uses these helpers internally. You can also import them directly for 
 | `SPFxTemplateCategory` | Union type of template categories: `'webpart' | 'extension' | 'ace' | 'library'` |
 | `SPFX_TEMPLATE_CATEGORIES` | Array of all valid category values (useful for validation/iteration) |
 | `ENGINE_VERSION` | Semver string identifying the installed engine version (matches `package.json` version) |
+| `buildBuiltInContext` | Computes the 10 built-in context variables from raw CLI inputs (UUIDs, solution name, badge URL, etc.) |
+| `ISPFxBuiltInContextInputs` | Input interface for `buildBuiltInContext` |
+| `ISPFxBuiltInContext` | Output interface — the 10 built-in variables every template receives |
+| `IBuildBuiltInContextOptions` | Options for `buildBuiltInContext` (e.g. `ciMode`) |
+| `BUILT_IN_PARAMETER_NAMES` | `ReadonlySet` of all built-in context variable names |
 | `ISPFxTemplateJson` | Shape of the `template.json` manifest (includes `category`, optional `minimumEngineVersion`) |
 | `SPFxTemplateDefinitionSchema` | Zod schema for validating a `template.json` (uses passthrough mode for forward compatibility) |
 | `SPFxTemplateJsonFile` | Typed wrapper around a parsed `template.json` file |
