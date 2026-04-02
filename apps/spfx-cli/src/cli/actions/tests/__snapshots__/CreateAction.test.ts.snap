@@ -115,7 +115,7 @@ Array [
   "[    log] [n]",
   "[    log] The following files will be generated:[n]",
   "[    log] [n]",
-  "[warning] --package-manager \\"npm\\" is overridden by \\"pnpm\\" from the existing project's scaffold log.[n]",
+  "[warning] --package-manager \\"npm\\" is overridden by \\"pnpm\\" from the existing project's scaffold log. The --package-manager parameter will be ignored.[n]",
   "[    log] Running pnpm install in /tmp/test/test...[n]",
   "[    log] pnpm install completed successfully.[n]",
 ]

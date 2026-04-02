@@ -98,7 +98,15 @@ export interface IRenderOptions {
 export function _isBinaryFile(filePath: string): boolean;
 
 // @public
-export type ISPFxScaffoldEvent = ITemplateRenderedEvent | IPackageManagerSelectedEvent | IFileWriteEvent | IPackageManagerInstallCompletedEvent;
+export interface ISessionStartedEvent extends ISPFxScaffoldEventBase {
+    // (undocumented)
+    cliVersion: string;
+    // (undocumented)
+    kind: 'session-started';
+}
+
+// @public
+export type ISPFxScaffoldEvent = ISessionStartedEvent | ITemplateRenderedEvent | IPackageManagerSelectedEvent | IFileWriteEvent | IPackageManagerInstallCompletedEvent;
 
 // @public
 export interface ISPFxScaffoldEventBase {
@@ -218,8 +226,8 @@ export class SPFxScaffoldLog {
     }>[];
     get hasEntries(): boolean;
     get lastPackageManager(): string | undefined;
-    static loadAsync(targetDir: string): Promise<SPFxScaffoldLog>;
-    saveAsync(targetDir: string): Promise<void>;
+    static loadFromFolderAsync(targetDir: string): Promise<SPFxScaffoldLog>;
+    saveToFolderAsync(targetDir: string): Promise<void>;
     toJsonl(): string;
 }
 

@@ -36,6 +36,7 @@ export type ISPFxScaffoldEventInput = ISPFxScaffoldEvent extends infer E
  */
 export class SPFxScaffoldLog {
   private readonly _events: ISPFxScaffoldEvent[] = [];
+  private _lastPackageManager: string | undefined;
 
   /**
    * Appends an event to the log.  If `timestamp` is omitted or empty
@@ -47,6 +48,11 @@ export class SPFxScaffoldLog {
       timestamp: event.timestamp || new Date().toISOString()
     } as ISPFxScaffoldEvent;
     this._events.push(normalizedEvent);
+
+    if (normalizedEvent.kind === 'package-manager-selected') {
+      const pm: string = (normalizedEvent as IPackageManagerSelectedEvent).packageManager;
+      this._lastPackageManager = pm !== 'none' ? pm : undefined;
+    }
   }
 
   /** Whether the log contains any events. */
@@ -71,12 +77,13 @@ export class SPFxScaffoldLog {
   /**
    * Returns the package manager from the most recent `package-manager-selected`
    * event, or `undefined` if none has been recorded or the last selection was `'none'`.
+   *
+   * @remarks
+   * This value is cached and updated incrementally on each {@link SPFxScaffoldLog.append}
+   * call, so reading it is O(1).
    */
   public get lastPackageManager(): string | undefined {
-    const pmEvents: IPackageManagerSelectedEvent[] = this.getEventsOfKind('package-manager-selected');
-    const last: string | undefined =
-      pmEvents.length > 0 ? pmEvents[pmEvents.length - 1]!.packageManager : undefined;
-    return last && last !== 'none' ? last : undefined;
+    return this._lastPackageManager;
   }
 
   /** Serializes the log to JSONL (one JSON object per line, no trailing newline). */
@@ -119,13 +126,13 @@ export class SPFxScaffoldLog {
   /**
    * Loads a scaffold log from disk. Returns an empty log if the file does not exist.
    */
-  public static async loadAsync(targetDir: string): Promise<SPFxScaffoldLog> {
+  public static async loadFromFolderAsync(targetDir: string): Promise<SPFxScaffoldLog> {
     const filePath: string = `${targetDir}/${SCAFFOLD_LOG_FILENAME}`;
     let content: string;
     try {
       content = await FileSystem.readFileAsync(filePath);
-    } catch (error: unknown) {
-      if (FileSystem.isNotExistError(error as Error)) {
+    } catch (error) {
+      if (FileSystem.isNotExistError(error)) {
         return new SPFxScaffoldLog();
       }
       throw error;
@@ -136,7 +143,7 @@ export class SPFxScaffoldLog {
   /**
    * Persists the scaffold log to disk as {@link SCAFFOLD_LOG_FILENAME}.
    */
-  public async saveAsync(targetDir: string): Promise<void> {
+  public async saveToFolderAsync(targetDir: string): Promise<void> {
     const filePath: string = `${targetDir}/${SCAFFOLD_LOG_FILENAME}`;
     const content: string = this._events.length > 0 ? this.toJsonl() + '\n' : '';
     await FileSystem.writeFileAsync(filePath, content, { ensureFolderExists: true });

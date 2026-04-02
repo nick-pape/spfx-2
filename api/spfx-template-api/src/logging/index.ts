@@ -3,6 +3,7 @@
 
 export {
   type ISPFxScaffoldEventBase,
+  type ISessionStartedEvent,
   type ITemplateRenderedEvent,
   type IPackageManagerSelectedEvent,
   type FileWriteOutcome,

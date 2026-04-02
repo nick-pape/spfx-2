@@ -39,7 +39,7 @@ const MockedLocal = LocalFileSystemRepositorySource as jest.MockedClass<
 >;
 const MockedExecutable = Executable as unknown as { spawn: jest.Mock; waitForExitAsync: jest.Mock };
 const MockedScaffoldLog = SPFxScaffoldLog as jest.MockedClass<typeof SPFxScaffoldLog> & {
-  loadAsync: jest.Mock;
+  loadFromFolderAsync: jest.Mock;
 };
 
 // Minimal mock TemplateOutput for a happy-path run
@@ -53,7 +53,7 @@ function createMockScaffoldLogInstance(
   lastPackageManager: string | undefined;
   events: unknown[];
   append: jest.Mock;
-  saveAsync: jest.Mock;
+  saveToFolderAsync: jest.Mock;
   getEventsOfKind: jest.Mock;
   toJsonl: jest.Mock;
 } {
@@ -62,7 +62,7 @@ function createMockScaffoldLogInstance(
     lastPackageManager,
     events: [],
     append: jest.fn(),
-    saveAsync: jest.fn().mockResolvedValue(undefined),
+    saveToFolderAsync: jest.fn().mockResolvedValue(undefined),
     getEventsOfKind: jest.fn().mockReturnValue([]),
     toJsonl: jest.fn().mockReturnValue('')
   };
@@ -146,7 +146,7 @@ describe('CreateAction', () => {
     MockedManager.prototype.getTemplatesAsync.mockResolvedValue(mockCollection);
 
     // Default: new project (no existing scaffold log on disk)
-    MockedScaffoldLog.loadAsync.mockResolvedValue(
+    MockedScaffoldLog.loadFromFolderAsync.mockResolvedValue(
       createMockScaffoldLogInstance(false) as unknown as SPFxScaffoldLog
     );
   });
@@ -660,7 +660,7 @@ describe('CreateAction', () => {
 
     describe('when scaffold log exists (existing project)', () => {
       it('overrides --package-manager with logged value and warns', async () => {
-        MockedScaffoldLog.loadAsync.mockResolvedValue(
+        MockedScaffoldLog.loadFromFolderAsync.mockResolvedValue(
           createMockScaffoldLogInstance(true, 'pnpm') as unknown as SPFxScaffoldLog
         );
 
@@ -674,7 +674,7 @@ describe('CreateAction', () => {
       });
 
       it('does not warn when --package-manager matches the logged value', async () => {
-        MockedScaffoldLog.loadAsync.mockResolvedValue(
+        MockedScaffoldLog.loadFromFolderAsync.mockResolvedValue(
           createMockScaffoldLogInstance(true, 'npm') as unknown as SPFxScaffoldLog
         );
 
@@ -688,7 +688,7 @@ describe('CreateAction', () => {
       });
 
       it('does not warn and skips install when --package-manager is "none"', async () => {
-        MockedScaffoldLog.loadAsync.mockResolvedValue(
+        MockedScaffoldLog.loadFromFolderAsync.mockResolvedValue(
           createMockScaffoldLogInstance(true, 'npm') as unknown as SPFxScaffoldLog
         );
 
@@ -697,7 +697,7 @@ describe('CreateAction', () => {
       });
 
       it('does not warn and skips install when --package-manager is omitted', async () => {
-        MockedScaffoldLog.loadAsync.mockResolvedValue(
+        MockedScaffoldLog.loadFromFolderAsync.mockResolvedValue(
           createMockScaffoldLogInstance(true, 'npm') as unknown as SPFxScaffoldLog
         );
 
@@ -706,7 +706,7 @@ describe('CreateAction', () => {
       });
 
       it('uses the specified --package-manager when log has no package manager', async () => {
-        MockedScaffoldLog.loadAsync.mockResolvedValue(
+        MockedScaffoldLog.loadFromFolderAsync.mockResolvedValue(
           createMockScaffoldLogInstance(true) as unknown as SPFxScaffoldLog
         );
 
@@ -721,11 +721,11 @@ describe('CreateAction', () => {
 
       it('saves the scaffold log after scaffolding', async () => {
         const mockInstance = createMockScaffoldLogInstance(true, 'npm');
-        MockedScaffoldLog.loadAsync.mockResolvedValue(mockInstance as unknown as SPFxScaffoldLog);
+        MockedScaffoldLog.loadFromFolderAsync.mockResolvedValue(mockInstance as unknown as SPFxScaffoldLog);
 
         await runCreateAsync(['--package-manager', 'npm']);
 
-        expect(mockInstance.saveAsync).toHaveBeenCalled();
+        expect(mockInstance.saveToFolderAsync).toHaveBeenCalled();
       });
     });
 
@@ -746,11 +746,11 @@ describe('CreateAction', () => {
 
       it('saves the scaffold log after scaffolding', async () => {
         const mockInstance = createMockScaffoldLogInstance(false);
-        MockedScaffoldLog.loadAsync.mockResolvedValue(mockInstance as unknown as SPFxScaffoldLog);
+        MockedScaffoldLog.loadFromFolderAsync.mockResolvedValue(mockInstance as unknown as SPFxScaffoldLog);
 
         await runCreateAsync();
 
-        expect(mockInstance.saveAsync).toHaveBeenCalled();
+        expect(mockInstance.saveToFolderAsync).toHaveBeenCalled();
       });
     });
   });

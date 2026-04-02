@@ -44,6 +44,7 @@ export {
 } from './writing/index';
 export {
   type ISPFxScaffoldEventBase,
+  type ISessionStartedEvent,
   type ITemplateRenderedEvent,
   type IPackageManagerSelectedEvent,
   type FileWriteOutcome,

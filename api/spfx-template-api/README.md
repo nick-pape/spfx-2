@@ -184,7 +184,7 @@ The writer uses these helpers internally. You can also import them directly for 
 import { SPFxScaffoldLog, SPFxTemplateWriter, type IFileWriteEvent } from '@microsoft/spfx-template-api';
 
 // Load existing log from disk (returns empty if file doesn't exist)
-const log = await SPFxScaffoldLog.loadAsync(targetDir);
+const log = await SPFxScaffoldLog.loadFromFolderAsync(targetDir);
 
 // Check if this is an existing project
 if (log.hasEntries) {
@@ -199,7 +199,7 @@ const writer = new SPFxTemplateWriter();
 await writer.writeAsync(templateFs, targetDir, { log });
 
 // Persist back to disk
-await log.saveAsync(targetDir);
+await log.saveToFolderAsync(targetDir);
 
 // Read the last package manager selection from the log
 const lastPM = log.lastPackageManager; // e.g. 'npm', or undefined if none recorded

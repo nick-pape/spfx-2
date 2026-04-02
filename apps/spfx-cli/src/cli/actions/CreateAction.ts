@@ -36,6 +36,8 @@ const CI_SOLUTION_ID: string = '22222222-2222-2222-2222-222222222222';
 
 const CLI_VERSION: string = packageJson.version;
 
+const VALID_PACKAGE_MANAGERS: ReadonlySet<PackageManager> = new Set<PackageManager>(['npm', 'pnpm', 'yarn']);
+
 interface IScaffoldProfile {
   localTemplateSources?: Array<string> | readonly string[];
   templateName: string;
@@ -147,8 +149,13 @@ export class CreateAction extends SPFxActionBase {
       const targetDir: string =
         rawTargetDir && rawTargetDir.length > 0 ? rawTargetDir : `${process.cwd()}/${solutionName}`;
 
-      const log: SPFxScaffoldLog = await SPFxScaffoldLog.loadAsync(targetDir);
+      const log: SPFxScaffoldLog = await SPFxScaffoldLog.loadFromFolderAsync(targetDir);
       const isExistingProject: boolean = log.hasEntries;
+
+      log.append({
+        kind: 'session-started',
+        cliVersion: CLI_VERSION
+      });
 
       const templateName: string = this._templateParameter.value;
       const options: IScaffoldProfile = {
@@ -248,16 +255,17 @@ export class CreateAction extends SPFxActionBase {
       if (packageManager !== 'none') {
         let resolvedPackageManager: PackageManager = packageManager;
 
-        const validPackageManagers: ReadonlySet<string> = new Set<string>(['npm', 'pnpm', 'yarn']);
         if (
           isExistingProject &&
           previousPackageManager &&
-          validPackageManagers.has(previousPackageManager) &&
+          VALID_PACKAGE_MANAGERS.has(previousPackageManager as PackageManager) &&
           previousPackageManager !== packageManager
         ) {
+          const packageManagerParameterLongName: string = this._packageManagerParameter.longName;
           terminal.writeWarningLine(
-            `${this._packageManagerParameter.longName} "${packageManager}" is overridden by ` +
-              `"${previousPackageManager}" from the existing project's scaffold log.`
+            `${packageManagerParameterLongName} "${packageManager}" is overridden by ` +
+              `"${previousPackageManager}" from the existing project's scaffold log. ` +
+              `The ${packageManagerParameterLongName} parameter will be ignored.`
           );
           resolvedPackageManager = previousPackageManager as PackageManager;
         }
@@ -265,7 +273,7 @@ export class CreateAction extends SPFxActionBase {
         await _runInstallAsync(resolvedPackageManager, targetDir, terminal, log);
       }
 
-      await log.saveAsync(targetDir);
+      await log.saveToFolderAsync(targetDir);
     } catch (error: unknown) {
       const message: string = error instanceof Error ? error.message : String(error);
       terminal.writeErrorLine(`Error creating SPFx component: ${message}`);

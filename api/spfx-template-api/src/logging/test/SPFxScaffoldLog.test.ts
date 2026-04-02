@@ -323,14 +323,14 @@ describe(SPFxScaffoldLog.name, () => {
 
   // ---- loadAsync ----------------------------------------------------------
 
-  describe(SPFxScaffoldLog.loadAsync.name, () => {
+  describe(SPFxScaffoldLog.loadFromFolderAsync.name, () => {
     it('returns a log with events when file exists', async () => {
       const original: SPFxScaffoldLog = new SPFxScaffoldLog();
       original.append(makeTemplateRenderedEvent());
       original.append(makeFileWriteEvent());
       mockFileSystem.readFileAsync.mockResolvedValue(original.toJsonl());
 
-      const loaded: SPFxScaffoldLog = await SPFxScaffoldLog.loadAsync('/project');
+      const loaded: SPFxScaffoldLog = await SPFxScaffoldLog.loadFromFolderAsync('/project');
 
       expect(loaded.events).toEqual(original.events);
       expect(loaded.hasEntries).toBe(true);
@@ -339,7 +339,7 @@ describe(SPFxScaffoldLog.name, () => {
     it('returns an empty log when file does not exist (ENOENT)', async () => {
       mockFileSystem.readFileAsync.mockRejectedValue(Object.assign(new Error('ENOENT'), { code: 'ENOENT' }));
 
-      const loaded: SPFxScaffoldLog = await SPFxScaffoldLog.loadAsync('/project');
+      const loaded: SPFxScaffoldLog = await SPFxScaffoldLog.loadFromFolderAsync('/project');
 
       expect(loaded.hasEntries).toBe(false);
       expect(loaded.events).toEqual([]);
@@ -350,13 +350,13 @@ describe(SPFxScaffoldLog.name, () => {
         Object.assign(new Error('EACCES: permission denied'), { code: 'EACCES' })
       );
 
-      await expect(SPFxScaffoldLog.loadAsync('/project')).rejects.toThrow('EACCES');
+      await expect(SPFxScaffoldLog.loadFromFolderAsync('/project')).rejects.toThrow('EACCES');
     });
 
     it('reads from the correct path using SCAFFOLD_LOG_FILENAME', async () => {
       mockFileSystem.readFileAsync.mockRejectedValue(Object.assign(new Error('ENOENT'), { code: 'ENOENT' }));
 
-      await SPFxScaffoldLog.loadAsync('/my/project');
+      await SPFxScaffoldLog.loadFromFolderAsync('/my/project');
 
       expect(mockFileSystem.readFileAsync).toHaveBeenCalledWith(`/my/project/${SCAFFOLD_LOG_FILENAME}`);
     });
@@ -364,12 +364,12 @@ describe(SPFxScaffoldLog.name, () => {
 
   // ---- saveAsync ----------------------------------------------------------
 
-  describe('saveAsync', () => {
+  describe('saveToFolderAsync', () => {
     it('writes JSONL via FileSystem.writeFileAsync', async () => {
       const log: SPFxScaffoldLog = new SPFxScaffoldLog();
       log.append(makeFileWriteEvent());
 
-      await log.saveAsync('/project');
+      await log.saveToFolderAsync('/project');
 
       expect(mockFileSystem.writeFileAsync).toHaveBeenCalledTimes(1);
       const writtenContent: string = mockFileSystem.writeFileAsync.mock.calls[0]![1] as string;
@@ -378,7 +378,7 @@ describe(SPFxScaffoldLog.name, () => {
 
     it('calls FileSystem.writeFileAsync with ensureFolderExists: true', async () => {
       const log: SPFxScaffoldLog = new SPFxScaffoldLog();
-      await log.saveAsync('/project');
+      await log.saveToFolderAsync('/project');
 
       expect(mockFileSystem.writeFileAsync).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
         ensureFolderExists: true
@@ -387,7 +387,7 @@ describe(SPFxScaffoldLog.name, () => {
 
     it('writes to the correct path using SCAFFOLD_LOG_FILENAME', async () => {
       const log: SPFxScaffoldLog = new SPFxScaffoldLog();
-      await log.saveAsync('/my/project');
+      await log.saveToFolderAsync('/my/project');
 
       expect(mockFileSystem.writeFileAsync).toHaveBeenCalledWith(
         `/my/project/${SCAFFOLD_LOG_FILENAME}`,
@@ -402,12 +402,12 @@ describe(SPFxScaffoldLog.name, () => {
       original.append(makeFileWriteEvent({ relativePath: 'src/index.ts' }));
       original.append(makePackageManagerSelectedEvent());
 
-      await original.saveAsync('/project');
+      await original.saveToFolderAsync('/project');
 
       const writtenContent: string = mockFileSystem.writeFileAsync.mock.calls[0]![1] as string;
       mockFileSystem.readFileAsync.mockResolvedValue(writtenContent);
 
-      const restored: SPFxScaffoldLog = await SPFxScaffoldLog.loadAsync('/project');
+      const restored: SPFxScaffoldLog = await SPFxScaffoldLog.loadFromFolderAsync('/project');
 
       expect(restored.events).toEqual(original.events);
     });
